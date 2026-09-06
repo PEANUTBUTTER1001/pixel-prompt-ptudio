@@ -296,17 +296,20 @@
     }
     .card-content.dimmed input,
     .card-content.dimmed select,
-    .card-content.dimmed button:not(.outfit-preset-btn) {
+    .card-content.dimmed button:not(.outfit-preset-btn):not(.text-preset-btn):not(.btn-add-text) {
       pointer-events: none;
       cursor: not-allowed;
       opacity: 0.5;
     }
     .card-content.dimmed .chips-group,
-    .card-content.dimmed .outfit-presets-bar {
+    .card-content.dimmed .outfit-presets-bar,
+    .card-content.dimmed .text-presets-bar {
       pointer-events: auto;
     }
     .card-content.dimmed .chip,
-    .card-content.dimmed .outfit-preset-btn {
+    .card-content.dimmed .outfit-preset-btn,
+    .card-content.dimmed .text-preset-btn,
+    .card-content.dimmed .btn-add-text {
       pointer-events: auto !important;
       cursor: pointer !important;
       position: relative;
@@ -320,6 +323,17 @@
       color: var(--text-main) !important;
       background: var(--bg-card) !important;
       box-shadow: 0 0 0 1.5px #f43f5e, 0 4px 14px rgba(244, 63, 94, 0.35) !important;
+      transform: translateY(-2px) scale(1.02);
+      z-index: 10;
+    }
+    .card-content.dimmed .text-preset-btn:hover,
+    .card-content.dimmed .btn-add-text:hover {
+      opacity: 1 !important;
+      filter: none !important;
+      border-color: #8b5cf6 !important;
+      color: var(--text-main) !important;
+      background: var(--bg-card) !important;
+      box-shadow: 0 0 0 1.5px #8b5cf6, 0 4px 14px rgba(139, 92, 246, 0.35) !important;
       transform: translateY(-2px) scale(1.02);
       z-index: 10;
     }
@@ -534,6 +548,281 @@
     }
     .check-item:hover { border-color: var(--border-hover); }
     .check-item input[type="checkbox"] { accent-color: #f43f5e; cursor: pointer; }
+    .check-item.disabled {
+      opacity: 0.65;
+      cursor: not-allowed;
+    }
+    .check-item input[type="checkbox"]:disabled {
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
+
+    /* Step 5 Subtitle & Text Overlay */
+    .text-overlay-toggle {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 6px;
+      background: rgba(139, 92, 246, 0.1);
+      border: 1px solid rgba(139, 92, 246, 0.35);
+      cursor: pointer;
+      font-size: 11px;
+      font-weight: 600;
+      color: #a78bfa;
+      transition: all 0.15s ease;
+    }
+    [data-theme="light"] .text-overlay-toggle {
+      color: #7c3aed;
+    }
+    .text-overlay-toggle:hover {
+      background: rgba(139, 92, 246, 0.2);
+    }
+    .text-overlay-toggle input {
+      accent-color: #8b5cf6;
+      cursor: pointer;
+    }
+
+    #notice_step5 {
+      background: rgba(139, 92, 246, 0.08);
+      border-color: rgba(139, 92, 246, 0.35);
+      color: #a78bfa;
+    }
+    [data-theme="light"] #notice_step5 {
+      color: #7c3aed;
+    }
+
+    .text-presets-bar {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 5px;
+      padding: 8px 10px;
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+      margin-bottom: 10px;
+    }
+    .text-preset-btn {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 8px;
+      border-radius: 5px;
+      background: var(--bg-input);
+      border: 1px solid var(--border-main);
+      color: var(--text-sub);
+      cursor: pointer;
+      transition: all 0.12s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .text-preset-btn:hover {
+      background: var(--bg-input-hover);
+      border-color: var(--border-hover);
+      color: var(--text-main);
+    }
+    .text-preset-btn.active {
+      background: rgba(139, 92, 246, 0.2);
+      border-color: #8b5cf6;
+      color: var(--preset-active-text);
+    }
+
+    .text-rows-container {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .text-row-item {
+      background: var(--bg-input);
+      border: 1px solid var(--border-main);
+      border-radius: 8px;
+      padding: 8px 10px;
+      transition: all 0.15s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+    .text-row-item:hover {
+      border-color: var(--border-hover);
+    }
+    .text-row-main {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .text-row-badge {
+      font-size: 11px;
+      font-weight: 700;
+      color: #8b5cf6;
+      background: rgba(139, 92, 246, 0.15);
+      border-radius: 4px;
+      padding: 2px 6px;
+      min-width: 26px;
+      text-align: center;
+    }
+    .text-row-input {
+      flex: 1;
+      background: var(--bg-inner);
+      border: 1px solid var(--border-main);
+      border-radius: 6px;
+      padding: 6px 10px;
+      font-size: 12px;
+      color: var(--text-main);
+      outline: none;
+      transition: border-color 0.15s ease;
+    }
+    .text-row-input:focus {
+      border-color: #8b5cf6;
+    }
+    .btn-remove-text {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.25);
+      color: #ef4444;
+      border-radius: 6px;
+      width: 28px;
+      height: 28px;
+      font-size: 13px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s ease;
+    }
+    .btn-remove-text:hover {
+      background: rgba(239, 68, 68, 0.25);
+      color: #ffffff;
+      border-color: #ef4444;
+    }
+    .text-row-options {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      padding-top: 5px;
+      border-top: 1px dashed var(--border-subtle);
+    }
+    .text-opt-group {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .text-opt-label {
+      font-size: 11px;
+      color: var(--text-muted);
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .text-select {
+      background: var(--bg-inner);
+      border: 1px solid var(--border-main);
+      border-radius: 5px;
+      padding: 3px 6px;
+      font-size: 11px;
+      color: var(--text-main);
+      outline: none;
+      cursor: pointer;
+      transition: border-color 0.15s ease;
+    }
+    .text-select:focus {
+      border-color: #8b5cf6;
+    }
+    .btn-add-text {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 6px 12px;
+      border-radius: 6px;
+      background: rgba(139, 92, 246, 0.12);
+      border: 1px solid rgba(139, 92, 246, 0.35);
+      color: #a78bfa;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .btn-add-text:hover {
+      background: rgba(139, 92, 246, 0.25);
+      border-color: #8b5cf6;
+      color: #ffffff;
+    }
+    [data-theme="light"] .btn-add-text {
+      color: #7c3aed;
+    }
+    [data-theme="light"] .btn-add-text:hover {
+      color: #ffffff;
+      background: #7c3aed;
+    }
+
+    /* Conflict avoidance badge */
+    .conflict-badge {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 700;
+      color: #f59e0b;
+      background: rgba(245, 158, 11, 0.15);
+      border: 1px solid rgba(245, 158, 11, 0.35);
+      padding: 1px 6px;
+      border-radius: 4px;
+      margin-left: 2px;
+      white-space: nowrap;
+    }
+
+    /* Strict Mode Panel in Step 6 */
+    .strict-mode-panel {
+      background: rgba(236, 72, 153, 0.08);
+      border: 1px solid rgba(236, 72, 153, 0.35);
+      border-radius: 8px;
+      padding: 9px 12px;
+      margin-bottom: 10px;
+      transition: all 0.15s ease;
+    }
+    .strict-mode-panel:hover {
+      border-color: #ec4899;
+      background: rgba(236, 72, 153, 0.12);
+    }
+    .strict-mode-label {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      cursor: pointer;
+    }
+    .strict-mode-label input[type="checkbox"] {
+      margin-top: 3px;
+      accent-color: #ec4899;
+      cursor: pointer;
+      width: 15px;
+      height: 15px;
+    }
+    .strict-mode-info {
+      flex: 1;
+    }
+    .strict-mode-title {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #f472b6;
+      margin-bottom: 3px;
+    }
+    [data-theme="light"] .strict-mode-title {
+      color: #db2777;
+    }
+    .strict-mode-badge {
+      font-size: 10px;
+      font-weight: 700;
+      color: #10b981;
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.35);
+      padding: 1px 5px;
+      border-radius: 4px;
+    }
+    .strict-mode-desc {
+      font-size: 11px;
+      color: var(--text-dim);
+      line-height: 1.4;
+    }
 
     /* Right Output Panel */
     .output-panel {
@@ -697,7 +986,7 @@
           PixelPrompt Studio
           <span class="badge">DirectX 60fps</span>
         </div>
-        <div class="brand-desc">5단계 고해상도 도트 프롬프트 빌더 (이미지 참조 & 중복 의상 믹스매치)</div>
+        <div class="brand-desc">6단계 고해상도 도트 프롬프트 빌더 (원본 1:1 엄격 보존 &amp; 자막 오버레이 &amp; 의상 믹스매치)</div>
       </div>
     </div>
     <label class="theme-switch-container" for="themeSwitch" title="다크 / 라이트 모드 전환">
@@ -980,30 +1269,45 @@
         <div class="card-header">
           <div class="card-title">
             <div class="step-num" style="background: #06b6d4;">4</div>
-            구도 & 배경 (Composition & Background)
+            화면 비율, 구도 &amp; 배경 (Aspect Ratio, Framing &amp; Background)
           </div>
           <!-- Skip Toggle -->
-          <label class="img-ref-toggle" title="체크 시 원본 이미지의 카메라 각도와 프레이밍을 따릅니다.">
+          <label class="img-ref-toggle" title="체크 시 원본 이미지의 종횡비, 카메라 각도 및 배경을 그대로 따릅니다.">
             <input type="checkbox" id="ref_step4" checked onchange="toggleRefStep(4)">
-            📷 첨부 이미지 구도 그대로 유지 (스킵)
+            📷 첨부 이미지 비율/구도/배경 그대로 유지 (스킵)
           </label>
         </div>
 
         <div class="skip-notice show" id="notice_step4">
           <span>✨</span>
-          <span><b>첨부 이미지 참조 모드:</b> 원본 이미지의 얼굴 각도, 1:1 프레이밍 및 구도를 그대로 계승합니다.</span>
+          <span><b>첨부 이미지 참조 모드:</b> 원본 이미지의 종횡비(가로세로 비율), 거리 풍경, 간판, 주변 인물을 100% 온전히 보존하여 도트화합니다. (1:1 강제 크롭 없음)</span>
         </div>
 
         <div class="card-content dimmed" id="content_step4">
+          <!-- 0. Aspect Ratio (Single Select) -->
+          <div class="form-group" style="margin-bottom: 10px;">
+            <div class="form-label">
+              <span>📐 캔버스 종횡비 &amp; 화면 비율 (1개만 선택)</span>
+              <span class="mode-badge-single">● 단일 선택</span>
+            </div>
+            <div class="chips-group" id="chips_aspect_ratio" data-mode="single">
+              <span class="chip active" data-val="strictly maintain the exact original aspect ratio and canvas dimensions of the reference image without cropping or forcing into 1:1 square">📐 원본 비율 유지 (기본)</span>
+              <span class="chip" data-val="16:9 widescreen cinematic aspect ratio, wide landscape framing">🎬 16:9 와이드 시네마틱</span>
+              <span class="chip" data-val="1:1 square aspect ratio framing">🔲 1:1 정사각 (SNS/아바타)</span>
+              <span class="chip" data-val="4:3 classic retro CRT TV aspect ratio framing">📺 4:3 클래식 레트로</span>
+              <span class="chip" data-val="9:16 vertical smartphone portrait framing">📱 9:16 세로 숏폼</span>
+            </div>
+          </div>
+
           <!-- 1. Framing & Composition (Single Select) -->
           <div class="form-group" style="margin-bottom: 10px;">
             <div class="form-label">
-              <span>📐 화면 구도 & 프레이밍 (1개만 선택)</span>
+              <span>👤 캐릭터 구도 &amp; 프레이밍 (1개만 선택)</span>
               <span class="mode-badge-single">● 단일 선택</span>
             </div>
             <div class="chips-group" id="chips_framing" data-mode="single">
-              <span class="chip active" data-val="Close-up square avatar icon, face nicely filling the 1:1 frame">👤 1:1 얼굴 클로즈업</span>
-              <span class="chip" data-val="Bust portrait avatar, perfectly centered in square frame">🥋 상반신 바스트업 정면</span>
+              <span class="chip active" data-val="Close-up avatar icon, face nicely filling the frame">👤 얼굴 클로즈업</span>
+              <span class="chip" data-val="Bust portrait avatar, centered in frame">🥋 상반신 바스트업</span>
               <span class="chip" data-val="Full-body miniature pixel character sprite, centered">🧍 전신 미니 캐릭터</span>
               <span class="chip" data-val="Isometric 2.5D quarter-view diorama framing">🎲 2.5D 아이소메트릭</span>
             </div>
@@ -1048,16 +1352,75 @@
       <div class="card">
         <div class="card-header">
           <div class="card-title">
-            <div class="step-num" style="background: #a855f7;">5</div>
-            금지 요소 & 품질 튜닝 (Negative & Quality)
+            <div class="step-num" style="background: #8b5cf6;">5</div>
+            💬 픽셀 자막 &amp; 텍스트 오버레이 (Subtitles &amp; Overlay)
           </div>
-          <span style="font-size: 11px; color: #71717a;">AI 결함 방지 및 도트 윤곽선 강조</span>
+          <!-- Toggle Subtitle Overlay -->
+          <label class="text-overlay-toggle" title="체크 시 이미지 내에 레트로 아케이드 폰트 자막을 삽입합니다.">
+            <input type="checkbox" id="enable_text_overlay" onchange="toggleTextOverlay()">
+            💬 픽셀 텍스트/자막 활성화
+          </label>
+        </div>
+
+        <div class="skip-notice show" id="notice_step5">
+          <span>💬</span>
+          <span><b>자막 비활성화 상태:</b> 토글 스위치를 켜거나 아래 프리셋/새 텍스트 버튼을 클릭하면 자막이 활성화됩니다.</span>
+        </div>
+
+        <div class="card-content dimmed" id="content_step5">
+          <!-- Quick Presets Bar -->
+          <div class="text-presets-bar">
+            <span style="font-size: 11px; font-weight: 700; color: #a1a1aa; margin-right: 4px;">⚡ 빠른 프리셋:</span>
+            <button type="button" class="text-preset-btn" data-preset="game_over" onclick="applyTextPreset('game_over')">💀 GAME OVER</button>
+            <button type="button" class="text-preset-btn" data-preset="stage_1" onclick="applyTextPreset('stage_1')">🕹️ STAGE 1</button>
+            <button type="button" class="text-preset-btn" data-preset="one_up" onclick="applyTextPreset('one_up')">⭐ 1UP</button>
+            <button type="button" class="text-preset-btn" data-preset="insert_coin" onclick="applyTextPreset('insert_coin')">🪙 INSERT COIN</button>
+            <button type="button" class="text-preset-btn" data-preset="mission_complete" onclick="applyTextPreset('mission_complete')">🏆 MISSION COMPLETE</button>
+            <button type="button" class="text-preset-btn" onclick="clearAllTextItems()" style="color: #71717a;">✕ 비우기</button>
+          </div>
+
+          <!-- Dynamic Text Rows Container -->
+          <div id="text_rows_container" class="text-rows-container"></div>
+
+          <!-- Add Button Row -->
+          <div style="margin-top: 10px; display: flex; justify-content: space-between; align-items: center;">
+            <button type="button" class="btn-add-text" onclick="addTextItem()">➕ 새 텍스트/자막 추가</button>
+            <span style="font-size: 11px; color: #71717a;">* 위치(세로/가로) 및 폰트 색상을 개별 지정 가능</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 6 -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <div class="step-num" style="background: #ec4899;">6</div>
+            원본 1:1 엄격 제한 &amp; 품질 튜닝 (Strict 1:1 &amp; Quality)
+          </div>
+          <span style="font-size: 11px; color: #71717a;">AI 환각/추측 봉인 및 결함 방지</span>
+        </div>
+
+        <!-- Strict Faithful 1:1 & Anti-Hallucination Banner Panel -->
+        <div class="strict-mode-panel" id="panel_strict_mode">
+          <label class="strict-mode-label" for="chk_strict_mode">
+            <input type="checkbox" id="chk_strict_mode" checked onchange="updatePrompt()">
+            <div class="strict-mode-info">
+              <div class="strict-mode-title">
+                <span>🛡️ 원본 1:1 엄격 제한 &amp; 임의 추측/장식 덧붙임 방지 (Anti-Hallucination)</span>
+                <span class="strict-mode-badge">추천 ON</span>
+              </div>
+              <div class="strict-mode-desc">
+                AI가 멋대로 상상하여 원본에 없는 판타지 갑옷, 발광 이펙트, 불필요한 장신구를 덧붙이거나 강제 1:1 왜곡하는 현상을 원천 봉인합니다.
+              </div>
+            </div>
+          </label>
         </div>
 
         <div class="checkbox-grid">
-          <label class="check-item">
-            <input type="checkbox" id="neg_text" checked onchange="updatePrompt()">
-            텍스트/글자 제거
+          <label class="check-item" id="label_neg_text">
+            <input type="checkbox" id="neg_text" checked onchange="onNegTextChange()">
+            <span>텍스트/글자 제거</span>
+            <span id="neg_text_badge" class="conflict-badge" style="display: none;">⚠️ 자막 사용 중 자동 해제</span>
           </label>
           <label class="check-item">
             <input type="checkbox" id="neg_watermark" checked onchange="updatePrompt()">
@@ -1129,6 +1492,274 @@
   <script>
     let currentStyleVal = "Chunky 8-bit pixel art, visible large square pixel blocks, retro NES arcade game style, low-resolution blocky dot design";
     let targetFormats = [".png"];
+    let userNegTextPref = true;
+
+    // Step 5: Subtitle & Text Overlay Presets & State
+    const TEXT_PRESETS = {
+      game_over: { text: "GAME OVER", vPos: "middle", hPos: "center", color: "arcade red" },
+      stage_1: { text: "STAGE 1", vPos: "top", hPos: "left", color: "golden yellow" },
+      one_up: { text: "1UP", vPos: "top", hPos: "right", color: "terminal green" },
+      insert_coin: { text: "INSERT COIN", vPos: "bottom", hPos: "center", color: "golden yellow" },
+      mission_complete: { text: "MISSION COMPLETE", vPos: "middle", hPos: "center", color: "golden yellow" }
+    };
+
+    let textItems = [
+      {
+        id: "txt_default",
+        text: "",
+        vPos: "bottom",
+        hPos: "center",
+        color: "white"
+      }
+    ];
+
+    function escapeHtml(str) {
+      if (!str) return "";
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    function hasActiveOverlayText() {
+      const toggle = document.getElementById('enable_text_overlay');
+      if (!toggle || !toggle.checked) return false;
+      return textItems.some(item => item.text && item.text.trim().length > 0);
+    }
+
+    function syncConflictAvoidance() {
+      const active = hasActiveOverlayText();
+      const negText = document.getElementById('neg_text');
+      const badge = document.getElementById('neg_text_badge');
+      const label = document.getElementById('label_neg_text');
+
+      if (negText) {
+        if (active) {
+          negText.checked = false;
+          negText.disabled = true;
+          if (badge) badge.style.display = 'inline-block';
+          if (label) label.classList.add('disabled');
+        } else {
+          negText.disabled = false;
+          negText.checked = (userNegTextPref !== undefined ? userNegTextPref : true);
+          if (badge) badge.style.display = 'none';
+          if (label) label.classList.remove('disabled');
+        }
+      }
+    }
+
+    function onNegTextChange() {
+      const chk = document.getElementById('neg_text');
+      if (chk && !chk.disabled) {
+        userNegTextPref = chk.checked;
+      }
+      updatePrompt();
+    }
+
+    function toggleTextOverlay() {
+      const toggle = document.getElementById('enable_text_overlay');
+      const content = document.getElementById('content_step5');
+      const notice = document.getElementById('notice_step5');
+      if (!toggle || !content) return;
+
+      if (toggle.checked) {
+        content.classList.remove("dimmed");
+        if (notice) notice.classList.remove("show");
+        content.querySelectorAll("input, select, button").forEach(el => {
+          el.removeAttribute("disabled");
+        });
+        if (textItems.length === 0) {
+          textItems.push({
+            id: "txt_" + Date.now(),
+            text: "",
+            vPos: "bottom",
+            hPos: "center",
+            color: "white"
+          });
+          renderTextRows();
+        }
+      } else {
+        content.classList.add("dimmed");
+        if (notice) notice.classList.add("show");
+        content.querySelectorAll("input, select, button:not(.text-preset-btn):not(.btn-add-text)").forEach(el => {
+          el.setAttribute("disabled", "true");
+        });
+      }
+      syncConflictAvoidance();
+      updatePrompt();
+    }
+
+    function applyTextPreset(key) {
+      const preset = TEXT_PRESETS[key];
+      if (!preset) return;
+
+      const toggle = document.getElementById('enable_text_overlay');
+      if (toggle && !toggle.checked) {
+        toggle.checked = true;
+        toggleTextOverlay();
+      }
+
+      if (textItems.length === 0) {
+        textItems.push({
+          id: "txt_" + Date.now() + "_" + Math.floor(Math.random() * 1000),
+          text: preset.text,
+          vPos: preset.vPos,
+          hPos: preset.hPos,
+          color: preset.color
+        });
+      } else {
+        textItems[0].text = preset.text;
+        textItems[0].vPos = preset.vPos;
+        textItems[0].hPos = preset.hPos;
+        textItems[0].color = preset.color;
+      }
+
+      document.querySelectorAll(".text-preset-btn").forEach(b => b.classList.remove("active"));
+      const targetBtn = document.querySelector(`.text-preset-btn[data-preset="${key}"]`);
+      if (targetBtn) targetBtn.classList.add("active");
+
+      renderTextRows();
+      syncConflictAvoidance();
+      updatePrompt();
+    }
+
+    function clearAllTextItems() {
+      textItems = [];
+      document.querySelectorAll(".text-preset-btn").forEach(b => b.classList.remove("active"));
+      renderTextRows();
+      syncConflictAvoidance();
+      updatePrompt();
+    }
+
+    function addTextItem(text = "", vPos = "bottom", hPos = "center", color = "white") {
+      const toggle = document.getElementById('enable_text_overlay');
+      if (toggle && !toggle.checked) {
+        toggle.checked = true;
+        toggleTextOverlay();
+      }
+
+      const newItem = {
+        id: "txt_" + Date.now() + "_" + Math.floor(Math.random() * 1000),
+        text: text,
+        vPos: vPos,
+        hPos: hPos,
+        color: color
+      };
+      textItems.push(newItem);
+      document.querySelectorAll(".text-preset-btn").forEach(b => b.classList.remove("active"));
+      renderTextRows();
+      syncConflictAvoidance();
+      updatePrompt();
+
+      setTimeout(() => {
+        const el = document.querySelector(`.text-row-item[data-id="${newItem.id}"] .text-row-input`);
+        if (el) el.focus();
+      }, 50);
+    }
+
+    function removeTextItem(id) {
+      textItems = textItems.filter(item => item.id !== id);
+      document.querySelectorAll(".text-preset-btn").forEach(b => b.classList.remove("active"));
+      renderTextRows();
+      syncConflictAvoidance();
+      updatePrompt();
+    }
+
+    function updateTextItemText(id, val) {
+      const item = textItems.find(it => it.id === id);
+      if (item) {
+        item.text = val;
+        document.querySelectorAll(".text-preset-btn").forEach(b => b.classList.remove("active"));
+        syncConflictAvoidance();
+        updatePrompt();
+      }
+    }
+
+    function updateTextItemVPos(id, val) {
+      const item = textItems.find(it => it.id === id);
+      if (item) {
+        item.vPos = val;
+        document.querySelectorAll(".text-preset-btn").forEach(b => b.classList.remove("active"));
+        updatePrompt();
+      }
+    }
+
+    function updateTextItemHPos(id, val) {
+      const item = textItems.find(it => it.id === id);
+      if (item) {
+        item.hPos = val;
+        document.querySelectorAll(".text-preset-btn").forEach(b => b.classList.remove("active"));
+        updatePrompt();
+      }
+    }
+
+    function updateTextItemColor(id, val) {
+      const item = textItems.find(it => it.id === id);
+      if (item) {
+        item.color = val;
+        document.querySelectorAll(".text-preset-btn").forEach(b => b.classList.remove("active"));
+        updatePrompt();
+      }
+    }
+
+    function renderTextRows() {
+      const container = document.getElementById("text_rows_container");
+      if (!container) return;
+
+      if (textItems.length === 0) {
+        container.innerHTML = `
+          <div style="text-align: center; padding: 14px; color: var(--text-dim); font-size: 11px; border: 1px dashed var(--border-subtle); border-radius: 6px;">
+            등록된 자막이 없습니다. 위의 ⚡ 빠른 프리셋을 클릭하거나 아래 [➕ 새 텍스트/자막 추가] 버튼을 눌러주세요.
+          </div>
+        `;
+        return;
+      }
+
+      let html = "";
+      textItems.forEach((item, index) => {
+        html += `
+          <div class="text-row-item" data-id="${item.id}">
+            <div class="text-row-main">
+              <span class="text-row-badge">#${index + 1}</span>
+              <input type="text" class="text-row-input" placeholder="문구 입력 (예: GAME OVER, STAGE 1, 자~ 드가자~~)" value="${escapeHtml(item.text)}" oninput="updateTextItemText('${item.id}', this.value)">
+              <button type="button" class="btn-remove-text" title="삭제" onclick="removeTextItem('${item.id}')">✕</button>
+            </div>
+            <div class="text-row-options">
+              <div class="text-opt-group">
+                <span class="text-opt-label">↕️ 세로:</span>
+                <select class="text-select" onchange="updateTextItemVPos('${item.id}', this.value)">
+                  <option value="bottom" ${item.vPos === 'bottom' ? 'selected' : ''}>하단 (Bottom)</option>
+                  <option value="top" ${item.vPos === 'top' ? 'selected' : ''}>상단 (Top)</option>
+                  <option value="middle" ${item.vPos === 'middle' ? 'selected' : ''}>중앙 (Middle)</option>
+                </select>
+              </div>
+              <div class="text-opt-group">
+                <span class="text-opt-label">↔️ 가로:</span>
+                <select class="text-select" onchange="updateTextItemHPos('${item.id}', this.value)">
+                  <option value="center" ${item.hPos === 'center' ? 'selected' : ''}>가운데 (Center)</option>
+                  <option value="left" ${item.hPos === 'left' ? 'selected' : ''}>왼쪽 (Left)</option>
+                  <option value="right" ${item.hPos === 'right' ? 'selected' : ''}>오른쪽 (Right)</option>
+                </select>
+              </div>
+              <div class="text-opt-group">
+                <span class="text-opt-label">🎨 색상:</span>
+                <select class="text-select" onchange="updateTextItemColor('${item.id}', this.value)">
+                  <option value="white" ${item.color === 'white' ? 'selected' : ''}>화이트 (White)</option>
+                  <option value="golden yellow" ${item.color === 'golden yellow' ? 'selected' : ''}>골든 옐로우 (Yellow)</option>
+                  <option value="arcade red" ${item.color === 'arcade red' ? 'selected' : ''}>아케이드 레드 (Red)</option>
+                  <option value="terminal green" ${item.color === 'terminal green' ? 'selected' : ''}>터미널 그린 (Green)</option>
+                  <option value="cyan" ${item.color === 'cyan' ? 'selected' : ''}>네온 시안 (Cyan)</option>
+                  <option value="hot pink" ${item.color === 'hot pink' ? 'selected' : ''}>핫 핑크 (Pink)</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        `;
+      });
+      container.innerHTML = html;
+    }
 
     function toggleTargetFormat(fmt) {
       const btn = document.getElementById("fmt_" + fmt.replace('.', ''));
@@ -1358,6 +1989,7 @@
     }
 
     function updatePrompt() {
+      syncConflictAvoidance();
       const parts = [];
 
       // Step 1: Style
@@ -1443,9 +2075,14 @@
       // Step 4: Framing & BG
       const refStep4 = document.getElementById('ref_step4').checked;
       if (refStep4) {
-        parts.push("following the angle and 1:1 framing of the reference image, clean background");
+        parts.push("strictly maintain the exact original aspect ratio and canvas dimensions of the reference image without cropping or forcing into 1:1 square");
+        parts.push("faithfully preserve and replicate the entire original background scene, street buildings, store signs, and surrounding crowd directly from the reference image in pixel art without removing or simplifying");
       } else {
         const step4Parts = [];
+
+        // 0. Aspect Ratio (single chip)
+        const ratioChips = getSelectedChips("chips_aspect_ratio");
+        if (ratioChips.length > 0) step4Parts.push(ratioChips[0]);
 
         // 1. Framing (single chip + custom)
         const framingChips = getSelectedChips("chips_framing");
@@ -1471,12 +2108,36 @@
         }
       }
 
-      // Step 5: Negatives in main
+      // Step 5: Text Overlay
+      const activeTexts = (document.getElementById('enable_text_overlay') && document.getElementById('enable_text_overlay').checked)
+        ? textItems.filter(item => item.text && item.text.trim().length > 0)
+        : [];
+
+      if (activeTexts.length === 1) {
+        const t = activeTexts[0];
+        parts.push(`with retro 8-bit chunky arcade pixel art text overlay reading "${t.text.trim()}" in ${t.color} pixel font located at ${t.vPos} ${t.hPos} with black pixel border outline`);
+      } else if (activeTexts.length > 1) {
+        const formatted = activeTexts.map(t => `"${t.text.trim()}" in ${t.color} pixel font at ${t.vPos} ${t.hPos}`);
+        parts.push(`with retro arcade pixel art text overlays: ${formatted.join(', ')}, sharp blocky 8-bit typography with black pixel border outline`);
+      }
+
+      if (activeTexts.length > 0) {
+        parts.push(`seamlessly replace and cleanly re-render any existing burned-in subtitle text from the reference image with this crisp pixel art text overlay, strictly avoiding duplicate text or overlapping captions`);
+      }
+
+      // Step 6: Strict 1:1 & Quality/Negatives
+      const isStrict = document.getElementById('chk_strict_mode') && document.getElementById('chk_strict_mode').checked;
+      if (isStrict) {
+        parts.push("Strict faithful 1:1 pixel conversion: do not guess, do not hallucinate, and do not invent any unrequested elements. Strictly prohibit adding extra accessories, fancy fantasy armor, decorative glowing effects, or new background objects not present in the reference image. Strictly pixelate only what is visibly present in the source image");
+      }
+
       const negMain = [];
-      if (document.getElementById('neg_text').checked) negMain.push('no text');
+      if (document.getElementById('neg_text').checked && activeTexts.length === 0) negMain.push('no text');
       if (document.getElementById('neg_watermark').checked) negMain.push('no watermark');
       if (document.getElementById('neg_blur').checked) negMain.push('no blur, no anti-aliasing');
       if (document.getElementById('neg_photo').checked) negMain.push('no realistic photograph, no 3d render');
+      if (isStrict) negMain.push('hallucinated details, extra accessories, invented elements, overdesigned, unwanted fantasy armor, unwanted particle effects, cropped edges, stretched aspect ratio, forced square 1:1');
+      if (activeTexts.length > 0) negMain.push('duplicate text, duplicated subtitles, double text overlays, overlapping captions');
       if (negMain.length > 0) parts.push(negMain.join(', '));
 
       // Target File Format
@@ -1497,10 +2158,12 @@
 
       // Dedicated Negative
       const negList = [];
-      if (document.getElementById('neg_text').checked) negList.push('text', 'letters', 'subtitles', 'alphabet');
+      if (document.getElementById('neg_text').checked && activeTexts.length === 0) negList.push('text', 'letters', 'subtitles', 'alphabet');
       if (document.getElementById('neg_watermark').checked) negList.push('watermark', 'signature', 'logo', 'username');
       if (document.getElementById('neg_blur').checked) negList.push('blur', 'anti-aliasing', 'soft gradients', 'unfocused');
       if (document.getElementById('neg_photo').checked) negList.push('realistic photograph', '3d render', 'clay', 'smooth vector');
+      if (isStrict) negList.push('hallucinated details', 'extra accessories', 'invented elements', 'overdesigned', 'unwanted fantasy armor', 'unwanted particle effects', 'cropped edges', 'stretched aspect ratio', 'forced square 1:1');
+      if (activeTexts.length > 0) negList.push('duplicate text', 'duplicated subtitles', 'double text overlays', 'overlapping captions', 'messy text artifacts');
       document.getElementById('negDisplay').innerText = negList.join(', ');
     }
 
@@ -1615,10 +2278,49 @@
       document.getElementById('custom_framing').value = "";
       document.getElementById('custom_background').value = "";
       document.getElementById('custom_lighting').value = "";
-      setChips("chips_framing", ["Close-up square avatar icon, face nicely filling the 1:1 frame"]);
+      setChips("chips_aspect_ratio", ["strictly maintain the exact original aspect ratio and canvas dimensions of the reference image without cropping or forcing into 1:1 square"]);
+      setChips("chips_framing", ["Close-up avatar icon, face nicely filling the frame"]);
       setChips("chips_background", ["clean solid dark vignette background, clean edges for cutout"]);
       setChips("chips_lighting", []);
 
+      // 4. Reset Step 5: Subtitle & Text Overlay
+      const toggleText = document.getElementById('enable_text_overlay');
+      if (toggleText) toggleText.checked = false;
+      document.querySelectorAll(".text-preset-btn").forEach(b => b.classList.remove("active"));
+      textItems = [
+        {
+          id: "txt_default",
+          text: "",
+          vPos: "bottom",
+          hPos: "center",
+          color: "white"
+        }
+      ];
+      renderTextRows();
+      toggleTextOverlay();
+
+      // 5. Reset Step 6: Negatives & Quality
+      userNegTextPref = true;
+      const chkStrict = document.getElementById('chk_strict_mode');
+      if (chkStrict) chkStrict.checked = true;
+
+      const negText = document.getElementById('neg_text');
+      if (negText) {
+        negText.checked = true;
+        negText.disabled = false;
+      }
+      const negBadge = document.getElementById('neg_text_badge');
+      if (negBadge) negBadge.style.display = 'none';
+      const labelNeg = document.getElementById('label_neg_text');
+      if (labelNeg) labelNeg.classList.remove('disabled');
+
+      document.getElementById('neg_watermark').checked = true;
+      document.getElementById('neg_blur').checked = true;
+      document.getElementById('opt_outlines').checked = true;
+      document.getElementById('opt_vibrant').checked = true;
+      document.getElementById('neg_photo').checked = true;
+
+      syncConflictAvoidance();
       updatePrompt();
     }
 
@@ -1667,6 +2369,8 @@
       try { toggleRefStep(2); } catch (e) {}
       try { toggleRefStep(3); } catch (e) {}
       try { toggleRefStep(4); } catch (e) {}
+      try { renderTextRows(); } catch (e) {}
+      try { toggleTextOverlay(); } catch (e) {}
       try { updatePrompt(); } catch (e) { console.error("updatePrompt err:", e); }
     }
 
