@@ -1,0 +1,47 @@
+# ========================================================
+#  👾 PixelPrompt Studio - .gitignore
+# ========================================================
+
+# Python Cache & Bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# PyInstaller Build Output & Cache
+build/
+dist/
+*.manifest
+
+# Virtual Environments
+.venv/
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# Logs & Temporary Files
+*.log
+*.tmp
+*.bak
+
+# IDE & Editor Settings
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+*.sublime-workspace
+
+# Operating System Files
+Thumbs.db
+ehthumbs.db
+[Dd]esktop.ini
+$RECYCLE.BIN/
+.DS_Store
+
+# Executable Binaries Note:
+# GitHub recommends attaching compiled binaries (.exe) via GitHub Releases.
+# If you wish to exclude .exe files from git tracking, uncomment the line below:
+# *.exe

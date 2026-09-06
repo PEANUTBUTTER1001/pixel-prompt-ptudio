@@ -1,0 +1,1680 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PixelPrompt Studio</title>
+  <link rel="icon" type="image/x-icon" href="assets/app_icon.ico">
+  <link rel="icon" type="image/png" href="assets/app_icon.png">
+  <style>
+    :root {
+      --bg-body: #09090b;
+      --bg-card: #121215;
+      --bg-subtle: #0d0d10;
+      --bg-input: #18181b;
+      --bg-input-hover: #27272a;
+      --bg-inner: #09090b;
+      --border-main: #27272a;
+      --border-subtle: #1f1f23;
+      --border-hover: #3f3f46;
+      --text-main: #f4f4f5;
+      --text-sub: #d4d4d8;
+      --text-muted: #a1a1aa;
+      --text-dim: #71717a;
+      --scrollbar-track: #121215;
+      --scrollbar-thumb: #27272a;
+      --scrollbar-thumb-hover: #3f3f46;
+      --btn-reset-bg: #27272a;
+      --btn-reset-color: #a1a1aa;
+      --btn-reset-hover-bg: #3f3f46;
+      --btn-reset-hover-color: #f4f4f5;
+      --chip-active-text: #6ee7b7;
+      --preset-active-text: #fecdd3;
+      --toggle-bg: #18181b;
+      --toggle-hover: #27272a;
+      --toggle-border: #27272a;
+    }
+
+    [data-theme="light"] {
+      --bg-body: #f1f3f5;
+      --bg-card: #ffffff;
+      --bg-subtle: #f8f9fa;
+      --bg-input: #f8f9fa;
+      --bg-input-hover: #e9ecef;
+      --bg-inner: #f8f9fa;
+      --border-main: #dee2e6;
+      --border-subtle: #e9ecef;
+      --border-hover: #ced4da;
+      --text-main: #111827;
+      --text-sub: #1f2937;
+      --text-muted: #4b5563;
+      --text-dim: #6b7280;
+      --scrollbar-track: #f1f3f5;
+      --scrollbar-thumb: #ced4da;
+      --scrollbar-thumb-hover: #adb5bd;
+      --btn-reset-bg: #e9ecef;
+      --btn-reset-color: #4b5563;
+      --btn-reset-hover-bg: #dee2e6;
+      --btn-reset-hover-color: #111827;
+      --chip-active-text: #059669;
+      --preset-active-text: #e11d48;
+      --toggle-bg: #ffffff;
+      --toggle-hover: #f1f3f5;
+      --toggle-border: #dee2e6;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Malgun Gothic", "맑은 고딕", sans-serif;
+      background-color: var(--bg-body);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      user-select: none;
+      transition: background-color 0.2s ease, color 0.2s ease;
+    }
+    input, select, textarea {
+      user-select: text;
+    }
+
+    /* Scrollbars */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: var(--scrollbar-track); }
+    ::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--scrollbar-thumb-hover); }
+
+    /* Header */
+    header {
+      background: var(--bg-card);
+      border-bottom: 1px solid var(--border-main);
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      transition: background-color 0.2s ease, border-color 0.2s ease;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .brand-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, #9333ea, #f43f5e);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 17px;
+      box-shadow: 0 4px 14px rgba(168, 85, 247, 0.35);
+      border: 1px solid rgba(236, 72, 153, 0.3);
+    }
+    .brand-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .badge {
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      background: rgba(244, 63, 94, 0.15);
+      border: 1px solid rgba(244, 63, 94, 0.35);
+      color: #fb7185;
+      font-weight: 600;
+    }
+    .brand-desc {
+      font-size: 11px;
+      color: var(--text-dim);
+    }
+
+    /* Theme Toggle Switch */
+    .theme-switch-container {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: var(--bg-input);
+      border: 1px solid var(--border-main);
+      border-radius: 20px;
+      padding: 4px 10px 4px 8px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+      user-select: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .theme-switch-container:hover {
+      border-color: var(--border-hover);
+      background: var(--bg-input-hover);
+    }
+    .theme-icon-label {
+      font-size: 13px;
+      line-height: 1;
+      opacity: 0.45;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      pointer-events: none;
+    }
+    .theme-icon-label.active {
+      opacity: 1;
+      transform: scale(1.15);
+    }
+    .theme-text {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-main);
+      min-width: 62px;
+      pointer-events: none;
+    }
+    .theme-switch {
+      position: relative;
+      display: inline-block;
+      width: 36px;
+      height: 20px;
+      pointer-events: none;
+    }
+    .theme-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .slider {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: var(--border-main);
+      border-radius: 20px;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      border: 1px solid var(--border-hover);
+    }
+    .slider::before {
+      position: absolute;
+      content: "";
+      height: 14px;
+      width: 14px;
+      left: 2px;
+      bottom: 2px;
+      background-color: #ffffff;
+      border-radius: 50%;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+    input:checked + .slider {
+      background: linear-gradient(135deg, #f43f5e, #fb7185);
+      border-color: #f43f5e;
+    }
+    input:checked + .slider::before {
+      transform: translateX(16px);
+    }
+
+    /* Main Layout */
+    main {
+      flex: 1;
+      padding: 14px 18px;
+      display: grid;
+      grid-template-columns: 1fr 430px;
+      gap: 14px;
+      max-width: 1500px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    /* Steps Column */
+    .steps-container {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      overflow-y: auto;
+      max-height: calc(100vh - 82px);
+      padding-right: 4px;
+    }
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-main);
+      border-radius: 10px;
+      padding: 13px 15px;
+      transition: all 0.2s ease;
+    }
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+    .card-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+    .step-num {
+      width: 20px;
+      height: 20px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 800;
+      color: #ffffff;
+    }
+
+    /* Image Reference Skip Toggle */
+    .img-ref-toggle {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 6px;
+      background: rgba(14, 165, 233, 0.1);
+      border: 1px solid rgba(14, 165, 233, 0.3);
+      cursor: pointer;
+      font-size: 11px;
+      font-weight: 600;
+      color: #0284c7;
+      transition: all 0.15s ease;
+    }
+    .img-ref-toggle:hover {
+      background: rgba(14, 165, 233, 0.2);
+    }
+    .img-ref-toggle input {
+      accent-color: #0284c7;
+      cursor: pointer;
+    }
+    .card-content.dimmed {
+      opacity: 0.38;
+      filter: grayscale(0.5);
+      user-select: none;
+      transition: opacity 0.2s ease, filter 0.2s ease;
+    }
+    .card-content.dimmed input,
+    .card-content.dimmed select,
+    .card-content.dimmed button:not(.outfit-preset-btn) {
+      pointer-events: none;
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
+    .card-content.dimmed .chips-group,
+    .card-content.dimmed .outfit-presets-bar {
+      pointer-events: auto;
+    }
+    .card-content.dimmed .chip,
+    .card-content.dimmed .outfit-preset-btn {
+      pointer-events: auto !important;
+      cursor: pointer !important;
+      position: relative;
+      transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .card-content.dimmed .chip:hover,
+    .card-content.dimmed .outfit-preset-btn:hover {
+      opacity: 1 !important;
+      filter: none !important;
+      border-color: #f43f5e !important;
+      color: var(--text-main) !important;
+      background: var(--bg-card) !important;
+      box-shadow: 0 0 0 1.5px #f43f5e, 0 4px 14px rgba(244, 63, 94, 0.35) !important;
+      transform: translateY(-2px) scale(1.02);
+      z-index: 10;
+    }
+    .skip-notice {
+      display: none;
+      background: rgba(14, 165, 233, 0.08);
+      border: 1px dashed rgba(14, 165, 233, 0.35);
+      border-radius: 6px;
+      padding: 6px 10px;
+      font-size: 11px;
+      color: #0284c7;
+      margin-bottom: 8px;
+      align-items: center;
+      gap: 6px;
+    }
+    .skip-notice.show {
+      display: flex;
+    }
+
+    /* Options & Radio */
+    .radio-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    .radio-card {
+      background: var(--bg-input);
+      border: 1px solid var(--border-main);
+      border-radius: 8px;
+      padding: 7px 9px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .radio-card:hover { border-color: var(--border-hover); }
+    .radio-card.active {
+      border-color: #f43f5e;
+      background: rgba(244, 63, 94, 0.08);
+    }
+    .radio-card-title {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .radio-card-desc {
+      font-size: 10px;
+      color: var(--text-dim);
+      margin-left: 17px;
+    }
+
+    .form-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .form-label {
+      font-size: 11px;
+      color: var(--text-muted);
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    input[type="text"], select {
+      background: var(--bg-input);
+      border: 1px solid var(--border-main);
+      border-radius: 6px;
+      padding: 6px 9px;
+      color: var(--text-main);
+      font-size: 12px;
+      outline: none;
+      width: 100%;
+      transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+    }
+    input[type="text"]:focus, select:focus {
+      border-color: #f43f5e;
+    }
+
+    /* Tag Chips Multi-select */
+    .chips-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-bottom: 6px;
+    }
+    .chip {
+      font-size: 11px;
+      padding: 4px 8px;
+      border-radius: 5px;
+      background: var(--bg-input);
+      border: 1px solid var(--border-main);
+      color: var(--text-muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.12s ease;
+    }
+    .chip:hover {
+      border-color: var(--border-hover);
+      color: var(--text-main);
+    }
+    .chip.active {
+      background: rgba(16, 185, 129, 0.15);
+      border-color: #10b981;
+      color: var(--chip-active-text);
+      font-weight: 600;
+    }
+    .chip.active::before {
+      content: "✓";
+      font-size: 10px;
+    }
+    .chips-group[data-mode="single"] .chip.active {
+      background: rgba(244, 63, 94, 0.16);
+      border-color: #f43f5e;
+      color: #fb7185;
+      font-weight: 700;
+    }
+    .chips-group[data-mode="single"] .chip.active::before {
+      content: "●";
+      font-size: 8px;
+    }
+    [data-theme="light"] .chips-group[data-mode="single"] .chip.active {
+      color: #e11d48;
+    }
+    .mode-badge-single {
+      font-size: 10px;
+      font-weight: 600;
+      color: #fb7185;
+      background: rgba(244, 63, 94, 0.12);
+      padding: 1px 6px;
+      border-radius: 4px;
+      border: 1px solid rgba(244, 63, 94, 0.3);
+    }
+    [data-theme="light"] .mode-badge-single {
+      color: #e11d48;
+    }
+    .mode-badge-multi {
+      font-size: 10px;
+      font-weight: 600;
+      color: #34d399;
+      background: rgba(16, 185, 129, 0.12);
+      padding: 1px 6px;
+      border-radius: 4px;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+    [data-theme="light"] .mode-badge-multi {
+      color: #059669;
+    }
+
+    /* Full-set preset bar inside Step 3 */
+    .outfit-presets-bar {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 5px;
+      padding: 8px 10px;
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+      margin-bottom: 10px;
+    }
+    .outfit-preset-btn {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 8px;
+      border-radius: 5px;
+      background: var(--bg-input);
+      border: 1px solid var(--border-main);
+      color: var(--text-sub);
+      cursor: pointer;
+      transition: all 0.12s ease;
+    }
+    .outfit-preset-btn:hover {
+      background: var(--bg-input-hover);
+      border-color: var(--border-hover);
+      color: var(--text-main);
+    }
+    .outfit-preset-btn.active {
+      background: rgba(244, 63, 94, 0.2);
+      border-color: #f43f5e;
+      color: var(--preset-active-text);
+    }
+
+    /* Checkbox Grid */
+    .checkbox-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+    }
+    .check-item {
+      background: var(--bg-input);
+      border: 1px solid var(--border-main);
+      border-radius: 6px;
+      padding: 6px 8px;
+      font-size: 11px;
+      color: var(--text-sub);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      transition: all 0.12s ease;
+    }
+    .check-item:hover { border-color: var(--border-hover); }
+    .check-item input[type="checkbox"] { accent-color: #f43f5e; cursor: pointer; }
+
+    /* Right Output Panel */
+    .output-panel {
+      background: var(--bg-card);
+      border: 1px solid var(--border-main);
+      border-radius: 10px;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      height: calc(100vh - 82px);
+      transition: background-color 0.2s ease, border-color 0.2s ease;
+    }
+    .output-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border-main);
+      margin-bottom: 10px;
+    }
+    .output-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+    .word-count { font-size: 11px; color: var(--text-dim); }
+    textarea#finalPrompt {
+      flex: 1;
+      background: var(--bg-inner);
+      border: 1px solid var(--border-main);
+      border-radius: 8px;
+      padding: 10px 12px;
+      color: var(--text-main);
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 12px;
+      line-height: 1.5;
+      resize: none;
+      outline: none;
+      margin-bottom: 10px;
+      transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+    }
+    textarea#finalPrompt:focus { border-color: #f43f5e; }
+
+    .btn-row { display: flex; gap: 6px; margin-bottom: 10px; }
+    .btn-copy {
+      flex: 1;
+      background: linear-gradient(135deg, #f43f5e, #e11d48);
+      border: none;
+      border-radius: 7px;
+      color: #ffffff;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 9px 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      box-shadow: 0 4px 12px rgba(244, 63, 94, 0.25);
+      transition: all 0.15s ease;
+    }
+    .btn-copy:hover { background: linear-gradient(135deg, #fb7185, #f43f5e); }
+    .btn-reset {
+      background: var(--btn-reset-bg);
+      border: none;
+      border-radius: 7px;
+      color: var(--btn-reset-color);
+      font-size: 11px;
+      font-weight: 600;
+      padding: 9px 12px;
+      cursor: pointer;
+      transition: all 0.12s ease;
+    }
+    .btn-reset:hover { background: var(--btn-reset-hover-bg); color: var(--btn-reset-hover-color); }
+
+    .neg-box {
+      background: var(--bg-inner);
+      border: 1px solid var(--border-main);
+      border-radius: 7px;
+      padding: 8px 10px;
+      transition: background-color 0.2s ease, border-color 0.2s ease;
+    }
+    .neg-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 4px;
+    }
+    .neg-title { font-size: 10px; font-weight: 600; color: var(--text-muted); }
+    .neg-copy-btn {
+      background: none;
+      border: none;
+      color: #f43f5e;
+      font-size: 10px;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+    .neg-content {
+      font-family: Consolas, monospace;
+      font-size: 10px;
+      color: var(--text-dim);
+      line-height: 1.3;
+      word-break: break-all;
+    }
+
+    /* Format Selector Bar */
+    .format-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--bg-inner);
+      border: 1px solid var(--border-main);
+      border-radius: 7px;
+      padding: 6px 10px;
+      margin-bottom: 8px;
+      transition: background-color 0.2s ease, border-color 0.2s ease;
+    }
+    .format-bar-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .format-btns {
+      display: flex;
+      gap: 4px;
+    }
+
+    /* Format Selector Buttons */
+    .fmt-btn {
+      background: var(--bg-input);
+      border: 1px solid var(--border-main);
+      color: var(--text-muted);
+      padding: 3px 8px;
+      border-radius: 5px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.12s ease;
+    }
+    .fmt-btn:hover {
+      border-color: var(--border-hover);
+      color: var(--text-main);
+    }
+    .fmt-btn.active {
+      background: rgba(244, 63, 94, 0.18);
+      border-color: #f43f5e;
+      color: #fb7185;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="brand">
+      <div class="brand-icon">👾</div>
+      <div>
+        <div class="brand-title">
+          PixelPrompt Studio
+          <span class="badge">DirectX 60fps</span>
+        </div>
+        <div class="brand-desc">5단계 고해상도 도트 프롬프트 빌더 (이미지 참조 & 중복 의상 믹스매치)</div>
+      </div>
+    </div>
+    <label class="theme-switch-container" for="themeSwitch" title="다크 / 라이트 모드 전환">
+      <span class="theme-icon-label active" id="themeDarkIcon">🌙</span>
+      <span class="theme-switch">
+        <input type="checkbox" id="themeSwitch" onchange="onThemeSwitchChange(event)">
+        <span class="slider"></span>
+      </span>
+      <span class="theme-icon-label" id="themeLightIcon">☀️</span>
+      <span class="theme-text" id="themeModeText">다크 모드</span>
+    </label>
+  </header>
+
+  <main>
+    <div class="steps-container">
+
+      <!-- STEP 1 -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <div class="step-num" style="background: #f43f5e;">1</div>
+            기본 스타일 & 게임 세대 (Style & Era)
+          </div>
+          <span style="font-size: 11px; color: #71717a;">도트 밀도 및 그래픽 질감</span>
+        </div>
+
+        <div class="radio-grid">
+          <div class="radio-card active" id="card_style_0" onclick="setStyle(0, 'Chunky 8-bit pixel art, visible large square pixel blocks, retro NES arcade game style, low-resolution blocky dot design')">
+            <div class="radio-card-title">
+              <input type="radio" name="style_era" id="style_0" checked>
+              8비트 고전 패미컴
+            </div>
+            <div class="radio-card-desc">투박하고 큼직한 도트 (깍두기 룩)</div>
+          </div>
+          <div class="radio-card" id="card_style_1" onclick="setStyle(1, 'High-resolution pixel art, 16-bit / 32-bit retro RPG style, crisp detailed dot design')">
+            <div class="radio-card-title">
+              <input type="radio" name="style_era" id="style_1">
+              16/32비트 명작 RPG
+            </div>
+            <div class="radio-card-desc">고해상도 섬세한 도트 (추천)</div>
+          </div>
+          <div class="radio-card" id="card_style_2" onclick="setStyle(2, 'High-definition pixel art, modern indie game aesthetic, vibrant pixel shading')">
+            <div class="radio-card-title">
+              <input type="radio" name="style_era" id="style_2">
+              모던 인디 HD 도트
+            </div>
+            <div class="radio-card-desc">선명하고 화려한 색감</div>
+          </div>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span style="font-size: 11px; color: #a1a1aa; white-space: nowrap;">추가 키워드:</span>
+          <input type="text" id="custom_style" placeholder="예: pastel color palette, soft lighting" oninput="updatePrompt()">
+        </div>
+      </div>
+
+      <!-- STEP 2 -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <div class="step-num" style="background: #f59e0b;">2</div>
+            캐릭터 외형 & 표정 (Character & Face)
+          </div>
+          <!-- Skip Toggle -->
+          <label class="img-ref-toggle" title="체크 시 원본 이미지의 얼굴, 헤어, 표정을 그대로 따르도록 지시하고 입력을 건너뜁니다.">
+            <input type="checkbox" id="ref_step2" checked onchange="toggleRefStep(2)">
+            📷 첨부 이미지 외형 그대로 유지 (스킵)
+          </label>
+        </div>
+
+        <div class="skip-notice show" id="notice_step2">
+          <span>✨</span>
+          <span><b>첨부 이미지 참조 모드:</b> 원본 이미지의 이목구비, 헤어스타일, 표정을 그대로 재현합니다. (세부 입력 스킵)</span>
+        </div>
+
+        <div class="card-content dimmed" id="content_step2">
+          <!-- 1. Character Type (Single Select) -->
+          <div class="form-group" style="margin-bottom: 10px;">
+            <div class="form-label">
+              <span>👤 캐릭터 기본 유형 (1개만 선택)</span>
+              <span class="mode-badge-single">● 단일 선택</span>
+            </div>
+            <div class="chips-group" id="chips_char_type" data-mode="single">
+              <span class="chip active" data-val="cute chibi anime girl">👧 치비 소녀</span>
+              <span class="chip" data-val="cute chibi anime boy">👦 치비 소년</span>
+              <span class="chip" data-val="cute fantasy cat creature">🐱 냥이 수인</span>
+              <span class="chip" data-val="brave young knight">⚔️ 어린 기사</span>
+              <span class="chip" data-val="mystic wizard pupil">🧙 꼬마 마법사</span>
+              <span class="chip" data-val="sleek cyber android">🤖 사이보그</span>
+              <span class="chip" data-val="graceful forest elf">🏹 숲의 엘프</span>
+              <span class="chip" data-val="cute fox spirit kitsune">🦊 여우 수인</span>
+              <span class="chip" data-val="playful little demon">👿 꼬마 악마</span>
+              <span class="chip" data-val="holy angel with tiny halo">👼 성스러운 천사</span>
+              <span class="chip" data-val="agile shadow ninja">🗡️ 그림자 닌자</span>
+            </div>
+            <input type="text" id="custom_char_type" placeholder="직접 추가 (예: noble elf archer)" oninput="updatePrompt()">
+          </div>
+
+          <!-- 2. Hair Style & Color (Multi-select) -->
+          <div class="form-group" style="margin-bottom: 10px;">
+            <div class="form-label">
+              <span>💇 헤어 스타일 & 헤어 컬러 (중복 체크 가능)</span>
+              <span class="mode-badge-multi">✓ 중복 선택 가능</span>
+            </div>
+            <div class="chips-group" id="chips_hair">
+              <span class="chip active" data-val="bob haircut">👧 단발 보브컷</span>
+              <span class="chip active" data-val="straight bangs">💇 뱅 앞머리</span>
+              <span class="chip" data-val="long straight hair">👱 긴 생머리</span>
+              <span class="chip" data-val="cute twintails">🎀 트윈테일</span>
+              <span class="chip" data-val="spiky haircut">🦔 삐죽머리</span>
+              <span class="chip" data-val="soft wavy curls">🌊 웨이브 펌</span>
+              <span class="chip" data-val="dango bun hair">🍡 당고머리</span>
+              <span class="chip" data-val="high sleek ponytail">🐴 포니테일</span>
+              <span class="chip" data-val="boyish pixie haircut">🦁 숏컷 보이시</span>
+              <span class="chip" data-val="drill twin ringlets">🥐 드릴 트윈롤</span>
+              <span class="chip active" data-val="brown hair">🤎 브라운</span>
+              <span class="chip" data-val="raven black hair">🖤 흑발</span>
+              <span class="chip" data-val="golden blonde hair">💛 금발</span>
+              <span class="chip" data-val="silver white hair">🤍 은발/백발</span>
+              <span class="chip" data-val="neon cyan hair">💎 네온 사이언</span>
+              <span class="chip" data-val="pastel pink hair">🌸 핑크 헤어</span>
+              <span class="chip" data-val="deep purple hair">💜 딥 퍼플</span>
+              <span class="chip" data-val="two-tone pastel gradient hair">🌈 투톤 그라데이션</span>
+            </div>
+            <input type="text" id="custom_hair" placeholder="직접 추가 (예: with teal inner highlights)" oninput="updatePrompt()">
+          </div>
+
+          <!-- 3. Eyes Detail (Multi-select) -->
+          <div class="form-group" style="margin-bottom: 10px;">
+            <div class="form-label">
+              <span>✨ 눈동자 & 눈빛 (중복 체크 가능)</span>
+              <span class="mode-badge-multi">✓ 중복 선택 가능</span>
+            </div>
+            <div class="chips-group" id="chips_eyes">
+              <span class="chip active" data-val="large sparkling eyes">✨ 반짝이는 큰 눈</span>
+              <span class="chip" data-val="round innocent eyes">👀 둥글고 맑은 눈</span>
+              <span class="chip" data-val="sharp feline cat eyes">😼 날카로운 고양이눈</span>
+              <span class="chip" data-val="glowing visor HUD eyes">🕶️ 사이버 안광</span>
+              <span class="chip" data-val="pink heart-shaped pupils">💖 하트 눈동자</span>
+              <span class="chip" data-val="hypnotic dizzy swirl eyes">🌀 소용돌이 눈</span>
+              <span class="chip" data-val="half-closed sleepy gaze">👁️ 반쯤 감은 눈</span>
+              <span class="chip active" data-val="brown eyes">🤎 갈색 눈동자</span>
+              <span class="chip" data-val="sapphire blue eyes">💙 사파이어 블루</span>
+              <span class="chip" data-val="emerald green eyes">💚 에메랄드 그린</span>
+              <span class="chip" data-val="ruby red eyes">❤️ 루비 레드</span>
+              <span class="chip" data-val="amethyst violet eyes">💜 바이올렛</span>
+              <span class="chip" data-val="luminous amber golden eyes">💛 호박색 금안</span>
+              <span class="chip" data-val="mystic pale silver pupils">✨ 신비로운 은백안</span>
+              <span class="chip" data-val="heterochromia odd eyes">👁️ 오드아이</span>
+            </div>
+            <input type="text" id="custom_eyes" placeholder="직접 추가 (예: starry pupils)" oninput="updatePrompt()">
+          </div>
+
+          <!-- 4. Expression & Blush (Multi-select) -->
+          <div class="form-group">
+            <div class="form-label">
+              <span>😊 표정 & 볼터치 (중복 체크 가능)</span>
+              <span class="mode-badge-multi">✓ 중복 선택 가능</span>
+            </div>
+            <div class="chips-group" id="chips_expression">
+              <span class="chip active" data-val="cute happy open smile showing teeth">😊 활짝 웃는 미소</span>
+              <span class="chip active" data-val="soft peach blush cheeks">😳 살구빛 볼터치</span>
+              <span class="chip" data-val="confident playful smirk">😼 자신만만한 미소</span>
+              <span class="chip" data-val="surprised wide open eyes">😮 깜짝 놀란 표정</span>
+              <span class="chip" data-val="sleepy relaxed eyes">😴 나른/졸린 표정</span>
+              <span class="chip" data-val="cute tiny vampire fang">🧛 앙증맞은 덧니</span>
+              <span class="chip" data-val="determined heroic gaze">😠 당찬 결의 표정</span>
+              <span class="chip" data-val="cool composed expression">😎 시크/쿨한 표정</span>
+              <span class="chip" data-val="playful mischievous wink with tongue out">😜 메롱 표정</span>
+              <span class="chip" data-val="teary pleading puppy eyes">🥺 글썽이는 눈망울</span>
+              <span class="chip" data-val="silly cute derp expression">🤤 헤벌레 멍한 표정</span>
+              <span class="chip" data-val="pouting with puffed cheeks">😡 뾰로통한 볼</span>
+              <span class="chip" data-val="mysterious secretive smile">🤫 쉿 비밀스러운 미소</span>
+            </div>
+            <input type="text" id="custom_expression" placeholder="직접 추가 (예: winking left eye)" oninput="updatePrompt()">
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 3 -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <div class="step-num" style="background: #10b981;">3</div>
+            의상, 모자 & 소품 (Outfit & Props)
+          </div>
+          <!-- Skip Toggle -->
+          <label class="img-ref-toggle" title="체크 시 원본 이미지의 복장과 장신구를 그대로 유지합니다.">
+            <input type="checkbox" id="ref_step3" checked onchange="toggleRefStep(3)">
+            📷 첨부 이미지 의상 그대로 유지 (스킵)
+          </label>
+        </div>
+
+        <div class="skip-notice show" id="notice_step3">
+          <span>✨</span>
+          <span><b>첨부 이미지 참조 모드:</b> 원본 이미지에 보이는 의상 및 장신구를 그대로 유지합니다. (세부 입력 스킵)</span>
+        </div>
+
+        <div class="card-content dimmed" id="content_step3">
+          <!-- Full-Set Preset Quick Pick -->
+          <div class="outfit-presets-bar">
+            <span style="font-size: 11px; font-weight: 700; color: #a1a1aa; margin-right: 4px;">⚡ 세트 프리셋:</span>
+            <button class="outfit-preset-btn active" onclick="applyOutfitSet('santa')">🎅 산타 세트</button>
+            <button class="outfit-preset-btn" onclick="applyOutfitSet('hanbok')">👘 한복/무협</button>
+            <button class="outfit-preset-btn" onclick="applyOutfitSet('wizard')">🧙‍♂️ 대마법사</button>
+            <button class="outfit-preset-btn" onclick="applyOutfitSet('knight')">⚔️ 성기사</button>
+            <button class="outfit-preset-btn" onclick="applyOutfitSet('school')">🏫 스쿨룩</button>
+            <button class="outfit-preset-btn" onclick="applyOutfitSet('casual')">🎧 스트릿</button>
+            <button class="outfit-preset-btn" onclick="applyOutfitSet('cyber')">⚡ 사이버</button>
+            <button class="outfit-preset-btn" onclick="applyOutfitSet('halloween')">🎃 할로윈</button>
+            <button class="outfit-preset-btn" onclick="clearOutfitChips()" style="color: #71717a;">✕ 비우기</button>
+          </div>
+
+          <!-- Category 1: Hats & Hair Accessories -->
+          <div class="form-group" style="margin-bottom: 10px;">
+            <div class="form-label">
+              <span>👒 모자 & 헤어 악세사리 (중복 체크 가능)</span>
+              <span style="font-size: 10px; font-weight: normal; color: #71717a;">다중 선택 후 자유롭게 추가 입력</span>
+            </div>
+            <div class="chips-group" id="chips_headwear">
+              <span class="chip active" data-val="red Santa hat with fluffy white trim">🎅 산타 모자</span>
+              <span class="chip" data-val="cute fuzzy cat ears headband">🐱 고양이 귀</span>
+              <span class="chip" data-val="pointed star-patterned wizard hat">🧙‍♂️ 뾰족 마법모</span>
+              <span class="chip" data-val="silver knight circlet with jewel">👑 기사 서클릿</span>
+              <span class="chip" data-val="classic navy beret">🎨 베레모</span>
+              <span class="chip" data-val="traditional Korean Gat hat">🎩 갓(Gat)</span>
+              <span class="chip" data-val="streetwear black beanie">🧢 비니/볼캡</span>
+              <span class="chip" data-val="over-ear tech headphones">🎧 헤드폰</span>
+              <span class="chip" data-val="cute ribbon hair tie">🎀 리본 머리끈</span>
+              <span class="chip" data-val="sleek cyber visor headset">🕶️ 사이버 바이저</span>
+            </div>
+            <input type="text" id="custom_headwear" placeholder="직접 추가 (예: tilted to the left, glowing star pin)" oninput="updatePrompt()">
+          </div>
+
+          <!-- Category 2: Outfits & Collars -->
+          <div class="form-group" style="margin-bottom: 10px;">
+            <div class="form-label">
+              <span>👗 착용 의상 & 옷깃 (중복 체크 가능)</span>
+              <span style="font-size: 10px; font-weight: normal; color: #71717a;">원하는 복장 요소들을 믹스매치</span>
+            </div>
+            <div class="chips-group" id="chips_outfit">
+              <span class="chip active" data-val="red Santa outfit">🎅 산타 복장</span>
+              <span class="chip active" data-val="fluffy white fur collar">❄️ 하얀 솜털 옷깃</span>
+              <span class="chip" data-val="traditional silk Hanbok robe">👘 비단 한복/도포</span>
+              <span class="chip" data-val="celestial starry wizard robe with gold trim">🌌 별자리 로브</span>
+              <span class="chip" data-val="polished silver plate armor">⚔️ 은빛 판금 갑옷</span>
+              <span class="chip" data-val="neat school uniform blazer and tie">🏫 교복 블레이저</span>
+              <span class="chip" data-val="oversized cozy pastel hoodie">🧥 오버핏 후드티</span>
+              <span class="chip" data-val="classic frilled maid apron dress">☕ 프릴 메이드복</span>
+              <span class="chip" data-val="high-tech combat jacket with neon piping">⚡ 네온 전투복</span>
+              <span class="chip" data-val="velvet hooded cloak">🦇 벨벳 망토</span>
+            </div>
+            <input type="text" id="custom_outfit" placeholder="직접 추가 (예: with gold button, embroidered patterns)" oninput="updatePrompt()">
+          </div>
+
+          <!-- Category 3: Props & Particles -->
+          <div class="form-group">
+            <div class="form-label">
+              <span>🪄 손에 든 소품 & 파티클 (중복 체크 가능)</span>
+              <span style="font-size: 10px; font-weight: normal; color: #71717a;">소품과 반짝임 이펙트를 함께 체크</span>
+            </div>
+            <div class="chips-group" id="chips_props">
+              <span class="chip active" data-val="visibly holding a glowing golden star wand on the bottom left">⭐ 별 요술봉(들고있음)</span>
+              <span class="chip active" data-val="sparkling magical stars particles">✨ 반짝이는 별빛 파티클</span>
+              <span class="chip" data-val="holding a crystal glass orb staff emitting mystic light">🔮 수정구 지팡이</span>
+              <span class="chip" data-val="holding a shining holy longsword and small shield">🗡️ 성검 & 방패</span>
+              <span class="chip" data-val="holding a traditional folding fan">🪭 전통 부채</span>
+              <span class="chip" data-val="holding a thick leather grimoire book">📖 마도서 책</span>
+              <span class="chip" data-val="holding a cute wrapped gift box with ribbon">🎁 선물 상자</span>
+              <span class="chip" data-val="holding a smartphone with charm strap">📱 스마트폰</span>
+              <span class="chip" data-val="holding an energy beam dagger">⚡ 에너지 단검</span>
+            </div>
+            <input type="text" id="custom_props" placeholder="직접 추가 (예: floating bubbles, tiny flame)" oninput="updatePrompt()">
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 4 -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <div class="step-num" style="background: #06b6d4;">4</div>
+            구도 & 배경 (Composition & Background)
+          </div>
+          <!-- Skip Toggle -->
+          <label class="img-ref-toggle" title="체크 시 원본 이미지의 카메라 각도와 프레이밍을 따릅니다.">
+            <input type="checkbox" id="ref_step4" checked onchange="toggleRefStep(4)">
+            📷 첨부 이미지 구도 그대로 유지 (스킵)
+          </label>
+        </div>
+
+        <div class="skip-notice show" id="notice_step4">
+          <span>✨</span>
+          <span><b>첨부 이미지 참조 모드:</b> 원본 이미지의 얼굴 각도, 1:1 프레이밍 및 구도를 그대로 계승합니다.</span>
+        </div>
+
+        <div class="card-content dimmed" id="content_step4">
+          <!-- 1. Framing & Composition (Single Select) -->
+          <div class="form-group" style="margin-bottom: 10px;">
+            <div class="form-label">
+              <span>📐 화면 구도 & 프레이밍 (1개만 선택)</span>
+              <span class="mode-badge-single">● 단일 선택</span>
+            </div>
+            <div class="chips-group" id="chips_framing" data-mode="single">
+              <span class="chip active" data-val="Close-up square avatar icon, face nicely filling the 1:1 frame">👤 1:1 얼굴 클로즈업</span>
+              <span class="chip" data-val="Bust portrait avatar, perfectly centered in square frame">🥋 상반신 바스트업 정면</span>
+              <span class="chip" data-val="Full-body miniature pixel character sprite, centered">🧍 전신 미니 캐릭터</span>
+              <span class="chip" data-val="Isometric 2.5D quarter-view diorama framing">🎲 2.5D 아이소메트릭</span>
+            </div>
+            <input type="text" id="custom_framing" placeholder="직접 추가 (예: dynamic low angle shot)" oninput="updatePrompt()">
+          </div>
+
+          <!-- 2. Background Style (Single Select) -->
+          <div class="form-group" style="margin-bottom: 10px;">
+            <div class="form-label">
+              <span>🖼️ 배경 스타일 (1개만 선택)</span>
+              <span class="mode-badge-single">● 단일 선택</span>
+            </div>
+            <div class="chips-group" id="chips_background" data-mode="single">
+              <span class="chip active" data-val="clean solid dark vignette background, clean edges for cutout">🌑 다크 비네팅 (누끼 쉬움)</span>
+              <span class="chip" data-val="solid plain background, high contrast, clean sharp borders">🔲 플랫 단색 (누끼 최적화)</span>
+              <span class="chip" data-val="subtle pastel geometric grid background">🏁 파스텔 격자</span>
+              <span class="chip" data-val="cyberpunk dark alley with neon city glow">🌃 사이버 네온</span>
+              <span class="chip" data-val="isolated transparent background with clean pixel cutout">✨ 투명 배경 (알파)</span>
+            </div>
+            <input type="text" id="custom_background" placeholder="직접 추가 (예: starry galaxy cosmos background)" oninput="updatePrompt()">
+          </div>
+
+          <!-- 3. Lighting & Special Effects (Multi-select) -->
+          <div class="form-group">
+            <div class="form-label">
+              <span>💡 연출 & 조명 효과 (중복 체크 가능)</span>
+              <span class="mode-badge-multi">✓ 중복 선택 가능</span>
+            </div>
+            <div class="chips-group" id="chips_lighting">
+              <span class="chip" data-val="dramatic rim lighting highlights on character edge">💡 림라이트 조명</span>
+              <span class="chip" data-val="floating subtle pixel dust particles around">✨ 반딧불 입자</span>
+              <span class="chip" data-val="pixel art decorative border frame">🔲 도트 테두리 액자</span>
+              <span class="chip" data-val="radiating energy aura glow around the silhouette">💥 에너지 오라</span>
+              <span class="chip" data-val="perfect symmetrical composition">🔍 좌우 대칭 구도</span>
+            </div>
+            <input type="text" id="custom_lighting" placeholder="직접 추가 (예: warm sunset volumetric god rays)" oninput="updatePrompt()">
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 5 -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <div class="step-num" style="background: #a855f7;">5</div>
+            금지 요소 & 품질 튜닝 (Negative & Quality)
+          </div>
+          <span style="font-size: 11px; color: #71717a;">AI 결함 방지 및 도트 윤곽선 강조</span>
+        </div>
+
+        <div class="checkbox-grid">
+          <label class="check-item">
+            <input type="checkbox" id="neg_text" checked onchange="updatePrompt()">
+            텍스트/글자 제거
+          </label>
+          <label class="check-item">
+            <input type="checkbox" id="neg_watermark" checked onchange="updatePrompt()">
+            워터마크/로고 제거
+          </label>
+          <label class="check-item">
+            <input type="checkbox" id="neg_blur" checked onchange="updatePrompt()">
+            블러/흐림 방지
+          </label>
+          <label class="check-item">
+            <input type="checkbox" id="opt_outlines" checked onchange="updatePrompt()">
+            칼같은 픽셀 윤곽선
+          </label>
+          <label class="check-item">
+            <input type="checkbox" id="opt_vibrant" checked onchange="updatePrompt()">
+            선명하고 쨍한 색감
+          </label>
+          <label class="check-item">
+            <input type="checkbox" id="neg_photo" checked onchange="updatePrompt()">
+            실사/3D 렌더링 배제
+          </label>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Right Output Panel -->
+    <div class="output-panel">
+      <div class="output-header">
+        <div class="output-title" style="display: flex; align-items: center; gap: 6px;">
+          <span>📝 최종 조합 프롬프트</span>
+          <span style="font-size: 10px; padding: 2px 6px; border-radius: 4px; background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.35); color: #6ee7b7; font-weight: 600;">🇰🇷 한글 답변 고정</span>
+        </div>
+        <div class="word-count" id="wordCount">단어 수: 54</div>
+      </div>
+
+      <!-- Format Selector Bar -->
+      <div class="format-bar">
+        <span class="format-bar-label">
+          <span>📦</span> 희망 파일 형식 (중복 선택 가능):
+        </span>
+        <div class="format-btns" id="formatBtns">
+          <button class="fmt-btn active" id="fmt_png" data-fmt=".png" onclick="toggleTargetFormat('.png')">.png</button>
+          <button class="fmt-btn" id="fmt_jpg" data-fmt=".jpg" onclick="toggleTargetFormat('.jpg')">.jpg</button>
+          <button class="fmt-btn" id="fmt_svg" data-fmt=".svg" onclick="toggleTargetFormat('.svg')">.svg</button>
+          <button class="fmt-btn" id="fmt_ico" data-fmt=".ico" onclick="toggleTargetFormat('.ico')">.ico</button>
+        </div>
+      </div>
+
+      <textarea id="finalPrompt" readonly>Chunky 8-bit pixel art, visible large square pixel blocks, retro NES arcade game style, low-resolution blocky dot design. recreating the exact character's face, hairstyle, and expression from the reference image. maintaining the original outfit and accessories visible in the reference image. following the angle and 1:1 framing of the reference image, clean background. no text, no watermark, no blur, no anti-aliasing, no realistic photograph, no 3d render. Target output format: deliver final asset as .png file. Please provide all responses and explanations strictly in Korean (모든 답변과 안내는 반드시 한국어로 작성해 주세요).</textarea>
+
+      <div class="btn-row">
+        <button class="btn-copy" id="copyBtn" onclick="copyPrompt()">
+          📋 프롬프트 원클릭 복사
+        </button>
+        <button class="btn-reset" onclick="resetAll()">초기화</button>
+      </div>
+
+      <div class="neg-box">
+        <div class="neg-header">
+          <span class="neg-title">부정 프롬프트 (Dedicated Negative)</span>
+          <button class="neg-copy-btn" onclick="copyNegative()">복사</button>
+        </div>
+        <div class="neg-content" id="negDisplay"></div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    let currentStyleVal = "Chunky 8-bit pixel art, visible large square pixel blocks, retro NES arcade game style, low-resolution blocky dot design";
+    let targetFormats = [".png"];
+
+    function toggleTargetFormat(fmt) {
+      const btn = document.getElementById("fmt_" + fmt.replace('.', ''));
+      if (btn) btn.classList.toggle("active");
+
+      const actives = [];
+      document.querySelectorAll(".fmt-btn.active").forEach(b => {
+        actives.push(b.getAttribute("data-fmt") || b.innerText.trim());
+      });
+      targetFormats = actives;
+      updatePrompt();
+    }
+
+    // Safe LocalStorage Handlers (Guards against sandboxed/file origin SecurityError)
+    function safeGetStorage(key) {
+      try {
+        if (typeof window !== "undefined" && window.localStorage) {
+          return window.localStorage.getItem(key);
+        }
+      } catch (e) {
+        console.warn("Storage access restricted:", e);
+      }
+      return null;
+    }
+
+    function safeSetStorage(key, val) {
+      try {
+        if (typeof window !== "undefined" && window.localStorage) {
+          window.localStorage.setItem(key, val);
+        }
+      } catch (e) {
+        console.warn("Storage write restricted:", e);
+      }
+    }
+
+    // Theme Management (Dark / Light Mode)
+    function initTheme() {
+      const saved = safeGetStorage('pixelprompt_theme');
+      if (saved === 'light') {
+        setTheme('light');
+      } else {
+        setTheme('dark');
+      }
+    }
+
+    function onThemeSwitchChange(e) {
+      const isLight = e && e.target ? e.target.checked : false;
+      setTheme(isLight ? 'light' : 'dark');
+    }
+
+    function toggleTheme() {
+      const current = document.documentElement.getAttribute('data-theme') || 'dark';
+      const next = (current === 'dark') ? 'light' : 'dark';
+      setTheme(next);
+    }
+
+    function setTheme(theme) {
+      const isLight = (theme === 'light');
+      document.documentElement.setAttribute('data-theme', isLight ? 'light' : 'dark');
+
+      // 1. Immediately update DOM elements (Guaranteed execution)
+      const chk = document.getElementById('themeSwitch');
+      const darkIcon = document.getElementById('themeDarkIcon');
+      const lightIcon = document.getElementById('themeLightIcon');
+      const modeText = document.getElementById('themeModeText');
+
+      if (chk) chk.checked = isLight;
+      if (modeText) modeText.textContent = isLight ? '라이트 모드' : '다크 모드';
+      if (darkIcon) {
+        if (isLight) darkIcon.classList.remove('active');
+        else darkIcon.classList.add('active');
+      }
+      if (lightIcon) {
+        if (isLight) lightIcon.classList.add('active');
+        else lightIcon.classList.remove('active');
+      }
+
+      // 2. Safely persist
+      safeSetStorage('pixelprompt_theme', isLight ? 'light' : 'dark');
+    }
+
+    function setStyle(idx, val) {
+      currentStyleVal = val;
+      for (let i = 0; i < 3; i++) {
+        const card = document.getElementById(`card_style_${i}`);
+        const radio = document.getElementById(`style_${i}`);
+        if (i === idx) {
+          card.classList.add('active');
+          radio.checked = true;
+        } else {
+          card.classList.remove('active');
+          radio.checked = false;
+        }
+      }
+      updatePrompt();
+    }
+
+    // Toggle Image Reference for Steps 2, 3, 4
+    function toggleRefStep(stepNum) {
+      const chk = document.getElementById(`ref_step${stepNum}`);
+      const content = document.getElementById(`content_step${stepNum}`);
+      const notice = document.getElementById(`notice_step${stepNum}`);
+      if (!chk || !content || !notice) return;
+
+      if (chk.checked) {
+        content.classList.add("dimmed");
+        notice.classList.add("show");
+        content.querySelectorAll("input, select, button:not(.outfit-preset-btn)").forEach(el => {
+          el.setAttribute("disabled", "true");
+        });
+      } else {
+        content.classList.remove("dimmed");
+        notice.classList.remove("show");
+        content.querySelectorAll("input, select, button").forEach(el => {
+          el.removeAttribute("disabled");
+        });
+      }
+      updatePrompt();
+    }
+
+    // Outfit Full-Set Presets
+    const OUTFIT_SETS = {
+      santa: {
+        head: ["red Santa hat with fluffy white trim"],
+        outfit: ["red Santa outfit", "fluffy white fur collar"],
+        props: ["visibly holding a glowing golden star wand on the bottom left", "sparkling magical stars particles"]
+      },
+      hanbok: {
+        head: ["traditional Korean Gat hat"],
+        outfit: ["traditional silk Hanbok robe"],
+        props: ["holding a traditional folding fan"]
+      },
+      wizard: {
+        head: ["pointed star-patterned wizard hat"],
+        outfit: ["celestial starry wizard robe with gold trim"],
+        props: ["holding a crystal glass orb staff emitting mystic light"]
+      },
+      knight: {
+        head: ["silver knight circlet with jewel"],
+        outfit: ["polished silver plate armor"],
+        props: ["holding a shining holy longsword and small shield"]
+      },
+      school: {
+        head: ["classic navy beret", "cute ribbon hair tie"],
+        outfit: ["neat school uniform blazer and tie"],
+        props: []
+      },
+      casual: {
+        head: ["streetwear black beanie", "over-ear tech headphones"],
+        outfit: ["oversized cozy pastel hoodie"],
+        props: ["holding a smartphone with charm strap"]
+      },
+      cyber: {
+        head: ["sleek cyber visor headset"],
+        outfit: ["high-tech combat jacket with neon piping"],
+        props: ["holding an energy beam dagger"]
+      },
+      halloween: {
+        head: ["pointed star-patterned wizard hat"],
+        outfit: ["velvet hooded cloak"],
+        props: ["sparkling magical stars particles"]
+      }
+    };
+
+    function applyOutfitSet(key, autoUnlock = true) {
+      const set = OUTFIT_SETS[key];
+      if (!set) return;
+
+      // Smart unlock Step 3 if dimmed AND autoUnlock is requested
+      if (autoUnlock) {
+        const chk3 = document.getElementById('ref_step3');
+        if (chk3 && chk3.checked) {
+          chk3.checked = false;
+          toggleRefStep(3);
+        }
+      }
+
+      // Update button visual
+      document.querySelectorAll(".outfit-preset-btn").forEach(b => b.classList.remove("active"));
+      const targetBtn = document.querySelector(`.outfit-preset-btn[onclick*="'${key}'"]`);
+      if (targetBtn) targetBtn.classList.add("active");
+
+      // Activate chips matching set
+      setChips("chips_headwear", set.head);
+      setChips("chips_outfit", set.outfit);
+      setChips("chips_props", set.props);
+
+      updatePrompt();
+    }
+
+    function setChips(containerId, activeVals) {
+      const chips = document.querySelectorAll(`#${containerId} .chip`);
+      chips.forEach(chip => {
+        const val = chip.getAttribute("data-val");
+        if (activeVals.includes(val)) {
+          chip.classList.add("active");
+        } else {
+          chip.classList.remove("active");
+        }
+      });
+    }
+
+    function clearOutfitChips(autoUnlock = true) {
+      // Smart unlock Step 3 if dimmed AND autoUnlock is requested
+      if (autoUnlock) {
+        const chk3 = document.getElementById('ref_step3');
+        if (chk3 && chk3.checked) {
+          chk3.checked = false;
+          toggleRefStep(3);
+        }
+      }
+
+      document.querySelectorAll(".outfit-preset-btn").forEach(b => b.classList.remove("active"));
+      document.querySelectorAll("#chips_headwear .chip, #chips_outfit .chip, #chips_props .chip").forEach(c => c.classList.remove("active"));
+      document.getElementById("custom_headwear").value = "";
+      document.getElementById("custom_outfit").value = "";
+      document.getElementById("custom_props").value = "";
+      updatePrompt();
+    }
+
+    function getSelectedChips(containerId) {
+      const active = [];
+      document.querySelectorAll(`#${containerId} .chip.active`).forEach(c => {
+        active.push(c.getAttribute("data-val"));
+      });
+      return active;
+    }
+
+    function updatePrompt() {
+      const parts = [];
+
+      // Step 1: Style
+      let styleCombined = currentStyleVal;
+      const customStyle = document.getElementById('custom_style').value.trim();
+      if (customStyle) styleCombined += `, ${customStyle}`;
+      if (document.getElementById('opt_outlines').checked) styleCombined += `, crisp pixel shading, sharp outlines`;
+      if (document.getElementById('opt_vibrant').checked) styleCombined += `, vibrant colors`;
+      parts.push(styleCombined);
+
+      // Step 2: Character
+      const refStep2 = document.getElementById('ref_step2').checked;
+      if (refStep2) {
+        parts.push("recreating the exact character's face, hairstyle, and expression from the reference image");
+      } else {
+        const charParts = [];
+
+        // 1. Character Type (single chip + custom)
+        const typeChips = getSelectedChips("chips_char_type");
+        const customType = document.getElementById("custom_char_type").value.trim();
+        const fullType = customType || (typeChips.length > 0 ? typeChips[0] : "");
+        if (fullType) charParts.push(fullType);
+
+        // 2. Hair (multi chips + custom)
+        const hairChips = getSelectedChips("chips_hair");
+        const customHair = document.getElementById("custom_hair").value.trim();
+        const allHair = [...hairChips];
+        if (customHair) allHair.push(customHair);
+        if (allHair.length > 0) charParts.push(`with ${allHair.join(', ')}`);
+
+        // 3. Eyes (multi chips + custom)
+        const eyesChips = getSelectedChips("chips_eyes");
+        const customEyes = document.getElementById("custom_eyes").value.trim();
+        const allEyes = [...eyesChips];
+        if (customEyes) allEyes.push(customEyes);
+        if (allEyes.length > 0) charParts.push(allEyes.join(', '));
+
+        // 4. Expression (multi chips + custom)
+        const exprChips = getSelectedChips("chips_expression");
+        const customExpr = document.getElementById("custom_expression").value.trim();
+        const allExpr = [...exprChips];
+        if (customExpr) allExpr.push(customExpr);
+        if (allExpr.length > 0) charParts.push(allExpr.join(', '));
+
+        if (charParts.length > 0) {
+          parts.push(charParts.join(', '));
+        }
+      }
+
+      // Step 3: Outfit & Props
+      const refStep3 = document.getElementById('ref_step3').checked;
+      if (refStep3) {
+        parts.push("maintaining the original outfit and accessories visible in the reference image");
+      } else {
+        const outfitParts = [];
+
+        // Headwear chips + custom
+        const headChips = getSelectedChips("chips_headwear");
+        const customHead = document.getElementById("custom_headwear").value.trim();
+        const allHead = [...headChips];
+        if (customHead) allHead.push(customHead);
+        if (allHead.length > 0) outfitParts.push(`wearing ${allHead.join(', ')}`);
+
+        // Outfit chips + custom
+        const bodyChips = getSelectedChips("chips_outfit");
+        const customOutfit = document.getElementById("custom_outfit").value.trim();
+        const allOutfit = [...bodyChips];
+        if (customOutfit) allOutfit.push(customOutfit);
+        if (allOutfit.length > 0) outfitParts.push(allOutfit.join(', '));
+
+        // Props chips + custom
+        const propsChips = getSelectedChips("chips_props");
+        const customProps = document.getElementById("custom_props").value.trim();
+        const allProps = [...propsChips];
+        if (customProps) allProps.push(customProps);
+        if (allProps.length > 0) outfitParts.push(allProps.join(', '));
+
+        if (outfitParts.length > 0) {
+          parts.push(outfitParts.join(', '));
+        }
+      }
+
+      // Step 4: Framing & BG
+      const refStep4 = document.getElementById('ref_step4').checked;
+      if (refStep4) {
+        parts.push("following the angle and 1:1 framing of the reference image, clean background");
+      } else {
+        const step4Parts = [];
+
+        // 1. Framing (single chip + custom)
+        const framingChips = getSelectedChips("chips_framing");
+        const customFraming = document.getElementById("custom_framing").value.trim();
+        const fullFraming = customFraming || (framingChips.length > 0 ? framingChips[0] : "");
+        if (fullFraming) step4Parts.push(fullFraming);
+
+        // 2. Background (single chip + custom)
+        const bgChips = getSelectedChips("chips_background");
+        const customBg = document.getElementById("custom_background").value.trim();
+        const fullBg = customBg || (bgChips.length > 0 ? bgChips[0] : "");
+        if (fullBg) step4Parts.push(fullBg);
+
+        // 3. Lighting & Effects (multi chips + custom)
+        const lightChips = getSelectedChips("chips_lighting");
+        const customLight = document.getElementById("custom_lighting").value.trim();
+        const allLight = [...lightChips];
+        if (customLight) allLight.push(customLight);
+        if (allLight.length > 0) step4Parts.push(allLight.join(', '));
+
+        if (step4Parts.length > 0) {
+          parts.push(step4Parts.join(', '));
+        }
+      }
+
+      // Step 5: Negatives in main
+      const negMain = [];
+      if (document.getElementById('neg_text').checked) negMain.push('no text');
+      if (document.getElementById('neg_watermark').checked) negMain.push('no watermark');
+      if (document.getElementById('neg_blur').checked) negMain.push('no blur, no anti-aliasing');
+      if (document.getElementById('neg_photo').checked) negMain.push('no realistic photograph, no 3d render');
+      if (negMain.length > 0) parts.push(negMain.join(', '));
+
+      // Target File Format
+      if (targetFormats.length === 1) {
+        parts.push(`Target output format: deliver final asset as ${targetFormats[0]} file`);
+      } else if (targetFormats.length > 1) {
+        parts.push(`Target output formats: deliver final assets as ${targetFormats.join(', ')} files`);
+      }
+
+      // Strictly Respond in Korean
+      parts.push(`Please provide all responses and explanations strictly in Korean (모든 답변과 안내는 반드시 한국어로 작성해 주세요)`);
+
+      const full = parts.join('. ') + '.';
+      document.getElementById('finalPrompt').value = full;
+
+      const words = full.split(/\s+/).filter(Boolean).length;
+      document.getElementById('wordCount').innerText = `단어 수: ${words}`;
+
+      // Dedicated Negative
+      const negList = [];
+      if (document.getElementById('neg_text').checked) negList.push('text', 'letters', 'subtitles', 'alphabet');
+      if (document.getElementById('neg_watermark').checked) negList.push('watermark', 'signature', 'logo', 'username');
+      if (document.getElementById('neg_blur').checked) negList.push('blur', 'anti-aliasing', 'soft gradients', 'unfocused');
+      if (document.getElementById('neg_photo').checked) negList.push('realistic photograph', '3d render', 'clay', 'smooth vector');
+      document.getElementById('negDisplay').innerText = negList.join(', ');
+    }
+
+    function copyTextToClipboard(text, targetEl, onSuccess) {
+      let copied = false;
+
+      // 1. Python Native API (pywebview)
+      if (window.pywebview && window.pywebview.api && window.pywebview.api.copy_text) {
+        window.pywebview.api.copy_text(text).then(ok => {
+          if (ok && onSuccess && !copied) {
+            copied = true;
+            onSuccess();
+          }
+        }).catch(() => {});
+      }
+
+      // 2. Modern Clipboard API
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(text).then(() => {
+          if (onSuccess && !copied) {
+            copied = true;
+            onSuccess();
+          }
+        }).catch(() => {});
+      }
+
+      // 3. Robust execCommand Fallback (Works 100% in WebView2 / local file)
+      let el = targetEl;
+      let created = false;
+      if (!el || typeof el.select !== "function") {
+        el = document.createElement("textarea");
+        el.value = text;
+        el.style.position = "fixed";
+        el.style.top = "-9999px";
+        el.style.left = "-9999px";
+        document.body.appendChild(el);
+        created = true;
+      }
+
+      try {
+        el.focus();
+        el.select();
+        if (typeof el.setSelectionRange === "function") {
+          el.setSelectionRange(0, el.value.length);
+        }
+        const successful = document.execCommand("copy");
+        if (successful && onSuccess && !copied) {
+          copied = true;
+          onSuccess();
+        }
+      } catch (err) {
+        console.error("Copy error:", err);
+      } finally {
+        if (created) {
+          document.body.removeChild(el);
+        }
+      }
+    }
+
+    function copyPrompt() {
+      const promptEl = document.getElementById('finalPrompt');
+      const text = promptEl.value;
+      const btn = document.getElementById('copyBtn');
+      copyTextToClipboard(text, promptEl, () => {
+        const orig = btn.innerHTML;
+        btn.innerHTML = '✅ 복사 완료!';
+        setTimeout(() => { btn.innerHTML = orig; }, 1500);
+      });
+    }
+
+    function copyNegative() {
+      const negEl = document.getElementById('negDisplay');
+      const text = negEl.innerText;
+      copyTextToClipboard(text, null, () => {
+        alert('부정 프롬프트가 복사되었습니다!');
+      });
+    }
+
+    function resetAll() {
+      // 1. Reset format buttons (.png only)
+      document.querySelectorAll(".fmt-btn").forEach(btn => {
+        if (btn.id === "fmt_png" || btn.getAttribute("data-fmt") === ".png") {
+          btn.classList.add("active");
+        } else {
+          btn.classList.remove("active");
+        }
+      });
+      targetFormats = [".png"];
+
+      // 2. Reset outfit preset to santa WITHOUT unlocking step 3 (autoUnlock = false)
+      applyOutfitSet('santa', false);
+
+      // 3. Reset image reference checks for Steps 2, 3, 4 to checked & toggle
+      document.getElementById('ref_step2').checked = true;
+      document.getElementById('ref_step3').checked = true;
+      document.getElementById('ref_step4').checked = true;
+      toggleRefStep(2);
+      toggleRefStep(3);
+      toggleRefStep(4);
+
+      // Reset Step 2 custom inputs & chips
+      document.getElementById('custom_char_type').value = "";
+      document.getElementById('custom_hair').value = "";
+      document.getElementById('custom_eyes').value = "";
+      document.getElementById('custom_expression').value = "";
+      setChips("chips_char_type", ["cute chibi anime girl"]);
+      setChips("chips_hair", ["bob haircut", "straight bangs", "brown hair"]);
+      setChips("chips_eyes", ["large sparkling eyes", "brown eyes"]);
+      setChips("chips_expression", ["cute happy open smile showing teeth", "soft peach blush cheeks"]);
+
+      // Reset Step 4 custom inputs & chips
+      document.getElementById('custom_framing').value = "";
+      document.getElementById('custom_background').value = "";
+      document.getElementById('custom_lighting').value = "";
+      setChips("chips_framing", ["Close-up square avatar icon, face nicely filling the 1:1 frame"]);
+      setChips("chips_background", ["clean solid dark vignette background, clean edges for cutout"]);
+      setChips("chips_lighting", []);
+
+      updatePrompt();
+    }
+
+    // Application Initialization
+    function initApp() {
+      try { initTheme(); } catch (e) { console.error("initTheme err:", e); }
+      try {
+        document.querySelectorAll(".chips-group").forEach(group => {
+          const isSingle = (group.getAttribute("data-mode") === "single");
+          group.querySelectorAll(".chip").forEach(chip => {
+            chip.addEventListener("click", (e) => {
+              const dimmedContainer = chip.closest(".dimmed");
+              if (dimmedContainer) {
+                // 스마트 언락: 컨테이너 ID(content_step2/3/4)로부터 해당 스킵 체크박스 해제
+                const stepNum = dimmedContainer.id.replace("content_step", "");
+                const refChk = document.getElementById("ref_step" + stepNum);
+                if (refChk && refChk.checked) {
+                  refChk.checked = false;
+                  toggleRefStep(stepNum);
+                }
+              }
+
+              if (isSingle) {
+                const wasActive = chip.classList.contains("active");
+                if (wasActive && !dimmedContainer) {
+                  // 이미 활성화된 단일 선택 칩을 다시 클릭하면 선택 해제 (0개 선택/빈 선택 지원)
+                  chip.classList.remove("active");
+                } else {
+                  // 동일 그룹 내 다른 칩 해제 후 클릭된 칩만 활성화
+                  group.querySelectorAll(".chip").forEach(c => c.classList.remove("active"));
+                  chip.classList.add("active");
+                }
+              } else {
+                // 다중 선택 모드: 스마트 언락으로 풀릴 때는 클릭한 칩을 즉시 활성화
+                if (dimmedContainer && !chip.classList.contains("active")) {
+                  chip.classList.add("active");
+                } else {
+                  chip.classList.toggle("active");
+                }
+              }
+              updatePrompt();
+            });
+          });
+        });
+      } catch (e) { console.error("chip init err:", e); }
+      try { toggleRefStep(2); } catch (e) {}
+      try { toggleRefStep(3); } catch (e) {}
+      try { toggleRefStep(4); } catch (e) {}
+      try { updatePrompt(); } catch (e) { console.error("updatePrompt err:", e); }
+    }
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", initApp);
+    } else {
+      initApp();
+    }
+  </script>
+</body>
+</html>
