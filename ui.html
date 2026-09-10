@@ -353,6 +353,31 @@
       display: flex;
     }
 
+    .char-type-warning {
+      display: flex;
+      align-items: flex-start;
+      gap: 7px;
+      padding: 6px 10px;
+      background: rgba(245, 158, 11, 0.08);
+      border: 1px solid rgba(245, 158, 11, 0.28);
+      border-radius: 6px;
+      font-size: 11px;
+      line-height: 1.45;
+      color: #fbbf24;
+      margin-bottom: 6px;
+    }
+    [data-theme="light"] .char-type-warning {
+      background: rgba(245, 158, 11, 0.1);
+      border-color: rgba(217, 119, 6, 0.35);
+      color: #b45309;
+    }
+    .char-type-warning-icon {
+      font-size: 13px;
+      line-height: 1;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
     /* Options & Radio */
     .radio-grid {
       display: grid;
@@ -1069,6 +1094,13 @@
               <span>👤 캐릭터 기본 유형 (1개만 선택)</span>
               <span class="mode-badge-single">● 단일 선택</span>
             </div>
+            <div class="char-type-warning">
+              <span class="char-type-warning-icon">⚠️</span>
+              <div>
+                <b>주의:</b> 유형 선택 시 프롬프트가 강해져 원본 얼굴을 무시하고 새 캐릭터가 생성될 수 있습니다.<br>
+                원본 유지 시 <b>유형 칩을 해제(재클릭)</b>하거나 상단의 <b>'📷 첨부 이미지 유지'</b> 모드를 권장합니다.
+              </div>
+            </div>
             <div class="chips-group" id="chips_char_type" data-mode="single">
               <span class="chip active" data-val="cute chibi anime girl">👧 치비 소녀</span>
               <span class="chip" data-val="cute chibi anime boy">👦 치비 소년</span>
@@ -1085,23 +1117,34 @@
             <input type="text" id="custom_char_type" placeholder="직접 추가 (예: noble elf archer)" oninput="updatePrompt()">
           </div>
 
-          <!-- 2. Hair Style & Color (Multi-select) -->
+          <!-- 2. Hair Style (Single Select) -->
           <div class="form-group" style="margin-bottom: 10px;">
             <div class="form-label">
-              <span>💇 헤어 스타일 & 헤어 컬러 (중복 체크 가능)</span>
-              <span class="mode-badge-multi">✓ 중복 선택 가능</span>
+              <span>💇 헤어 스타일 (1개만 선택)</span>
+              <span class="mode-badge-single">● 단일 선택</span>
             </div>
-            <div class="chips-group" id="chips_hair">
-              <span class="chip active" data-val="bob haircut">👧 단발 보브컷</span>
-              <span class="chip active" data-val="straight bangs">💇 뱅 앞머리</span>
-              <span class="chip" data-val="long straight hair">👱 긴 생머리</span>
-              <span class="chip" data-val="cute twintails">🎀 트윈테일</span>
-              <span class="chip" data-val="spiky haircut">🦔 삐죽머리</span>
-              <span class="chip" data-val="soft wavy curls">🌊 웨이브 펌</span>
-              <span class="chip" data-val="dango bun hair">🍡 당고머리</span>
+            <div class="chips-group" id="chips_hair_style" data-mode="single">
+              <span class="chip active" data-val="bob haircut with straight bangs">👧 단발 보브컷</span>
+              <span class="chip" data-val="straight bangs haircut">💇 뱅 앞머리</span>
+              <span class="chip" data-val="long straight silky hair">👱 긴 생머리</span>
+              <span class="chip" data-val="cute bouncy twintails">🎀 트윈테일</span>
+              <span class="chip" data-val="spiky anime haircut">🦔 삐죽머리</span>
+              <span class="chip" data-val="soft wavy curls hair">🌊 웨이브 펌</span>
+              <span class="chip" data-val="cute dango bun hair">🍡 당고머리</span>
               <span class="chip" data-val="high sleek ponytail">🐴 포니테일</span>
-              <span class="chip" data-val="boyish pixie haircut">🦁 숏컷 보이시</span>
-              <span class="chip" data-val="drill twin ringlets">🥐 드릴 트윈롤</span>
+              <span class="chip" data-val="boyish short pixie haircut">🦁 숏컷 보이시</span>
+              <span class="chip" data-val="drill twin ringlets hair">🥐 드릴 트윈롤</span>
+            </div>
+            <input type="text" id="custom_hair_style" placeholder="헤어스타일 직접 추가 (예: side braids)" oninput="updatePrompt()">
+          </div>
+
+          <!-- 3. Hair Color (Single Select) -->
+          <div class="form-group" style="margin-bottom: 10px;">
+            <div class="form-label">
+              <span>🎨 헤어 컬러 (1개만 선택)</span>
+              <span class="mode-badge-single">● 단일 선택</span>
+            </div>
+            <div class="chips-group" id="chips_hair_color" data-mode="single">
               <span class="chip active" data-val="brown hair">🤎 브라운</span>
               <span class="chip" data-val="raven black hair">🖤 흑발</span>
               <span class="chip" data-val="golden blonde hair">💛 금발</span>
@@ -1111,44 +1154,54 @@
               <span class="chip" data-val="deep purple hair">💜 딥 퍼플</span>
               <span class="chip" data-val="two-tone pastel gradient hair">🌈 투톤 그라데이션</span>
             </div>
-            <input type="text" id="custom_hair" placeholder="직접 추가 (예: with teal inner highlights)" oninput="updatePrompt()">
+            <input type="text" id="custom_hair_color" placeholder="헤어컬러 직접 추가 (예: emerald green highlights)" oninput="updatePrompt()">
           </div>
 
-          <!-- 3. Eyes Detail (Multi-select) -->
+          <!-- 4. Eye Color (Single Select) -->
           <div class="form-group" style="margin-bottom: 10px;">
             <div class="form-label">
-              <span>✨ 눈동자 & 눈빛 (중복 체크 가능)</span>
-              <span class="mode-badge-multi">✓ 중복 선택 가능</span>
+              <span>👁️ 눈동자 색상 (1개만 선택)</span>
+              <span class="mode-badge-single">● 단일 선택</span>
             </div>
-            <div class="chips-group" id="chips_eyes">
-              <span class="chip active" data-val="large sparkling eyes">✨ 반짝이는 큰 눈</span>
-              <span class="chip" data-val="round innocent eyes">👀 둥글고 맑은 눈</span>
-              <span class="chip" data-val="sharp feline cat eyes">😼 날카로운 고양이눈</span>
-              <span class="chip" data-val="glowing visor HUD eyes">🕶️ 사이버 안광</span>
-              <span class="chip" data-val="pink heart-shaped pupils">💖 하트 눈동자</span>
-              <span class="chip" data-val="hypnotic dizzy swirl eyes">🌀 소용돌이 눈</span>
-              <span class="chip" data-val="half-closed sleepy gaze">👁️ 반쯤 감은 눈</span>
+            <div class="chips-group" id="chips_eyes_color" data-mode="single">
               <span class="chip active" data-val="brown eyes">🤎 갈색 눈동자</span>
               <span class="chip" data-val="sapphire blue eyes">💙 사파이어 블루</span>
               <span class="chip" data-val="emerald green eyes">💚 에메랄드 그린</span>
               <span class="chip" data-val="ruby red eyes">❤️ 루비 레드</span>
               <span class="chip" data-val="amethyst violet eyes">💜 바이올렛</span>
               <span class="chip" data-val="luminous amber golden eyes">💛 호박색 금안</span>
-              <span class="chip" data-val="mystic pale silver pupils">✨ 신비로운 은백안</span>
+              <span class="chip" data-val="mystic pale silver pupils">✨ 은백안</span>
               <span class="chip" data-val="heterochromia odd eyes">👁️ 오드아이</span>
             </div>
-            <input type="text" id="custom_eyes" placeholder="직접 추가 (예: starry pupils)" oninput="updatePrompt()">
+            <input type="text" id="custom_eyes_color" placeholder="눈동자 색상 직접 추가 (예: glowing turquoise eyes)" oninput="updatePrompt()">
           </div>
 
-          <!-- 4. Expression & Blush (Multi-select) -->
-          <div class="form-group">
+          <!-- 5. Eye Shape & Gaze (Single Select) -->
+          <div class="form-group" style="margin-bottom: 10px;">
             <div class="form-label">
-              <span>😊 표정 & 볼터치 (중복 체크 가능)</span>
-              <span class="mode-badge-multi">✓ 중복 선택 가능</span>
+              <span>✨ 눈빛 &amp; 형태 (1개만 선택)</span>
+              <span class="mode-badge-single">● 단일 선택</span>
             </div>
-            <div class="chips-group" id="chips_expression">
+            <div class="chips-group" id="chips_eyes_shape" data-mode="single">
+              <span class="chip active" data-val="large sparkling anime eyes">✨ 반짝이는 큰 눈</span>
+              <span class="chip" data-val="round innocent cute eyes">👀 둥글고 맑은 눈</span>
+              <span class="chip" data-val="sharp feline cat eyes">😼 날카로운 고양이눈</span>
+              <span class="chip" data-val="glowing visor HUD eyes">🕶️ 사이버 안광</span>
+              <span class="chip" data-val="pink heart-shaped pupils">💖 하트 눈동자</span>
+              <span class="chip" data-val="hypnotic dizzy swirl eyes">🌀 소용돌이 눈</span>
+              <span class="chip" data-val="half-closed sleepy gaze">👁️ 반쯤 감은 눈</span>
+            </div>
+            <input type="text" id="custom_eyes_shape" placeholder="눈빛 형태 직접 추가 (예: teary glistening eyes)" oninput="updatePrompt()">
+          </div>
+
+          <!-- 6. Facial Expression (Single Select) -->
+          <div class="form-group" style="margin-bottom: 10px;">
+            <div class="form-label">
+              <span>😊 표정 (1개만 선택)</span>
+              <span class="mode-badge-single">● 단일 선택</span>
+            </div>
+            <div class="chips-group" id="chips_expression" data-mode="single">
               <span class="chip active" data-val="cute happy open smile showing teeth">😊 활짝 웃는 미소</span>
-              <span class="chip active" data-val="soft peach blush cheeks">😳 살구빛 볼터치</span>
               <span class="chip" data-val="confident playful smirk">😼 자신만만한 미소</span>
               <span class="chip" data-val="surprised wide open eyes">😮 깜짝 놀란 표정</span>
               <span class="chip" data-val="sleepy relaxed eyes">😴 나른/졸린 표정</span>
@@ -1161,7 +1214,23 @@
               <span class="chip" data-val="pouting with puffed cheeks">😡 뾰로통한 볼</span>
               <span class="chip" data-val="mysterious secretive smile">🤫 쉿 비밀스러운 미소</span>
             </div>
-            <input type="text" id="custom_expression" placeholder="직접 추가 (예: winking left eye)" oninput="updatePrompt()">
+            <input type="text" id="custom_expression" placeholder="표정 직접 추가 (예: winking left eye)" oninput="updatePrompt()">
+          </div>
+
+          <!-- 7. Blush (Single Select) -->
+          <div class="form-group">
+            <div class="form-label">
+              <span>😳 볼터치 (1개만 선택)</span>
+              <span class="mode-badge-single">● 단일 선택</span>
+            </div>
+            <div class="chips-group" id="chips_blush" data-mode="single">
+              <span class="chip active" data-val="soft peach blush cheeks">🍑 살구빛 볼터치</span>
+              <span class="chip" data-val="rosy flushed red blush cheeks">😳 발그레한 홍조</span>
+              <span class="chip" data-val="subtle shy hatched blush lines">🙈 수줍은 사선 볼터치</span>
+              <span class="chip" data-val="cute miniature heart blush decals">💖 하트 볼터치</span>
+              <span class="chip" data-val="clean cheeks without blush">❌ 볼터치 없음</span>
+            </div>
+            <input type="text" id="custom_blush" placeholder="볼터치 직접 추가 (예: bright anime blush stickers)" oninput="updatePrompt()">
           </div>
         </div>
       </div>
@@ -1200,13 +1269,13 @@
             <button class="outfit-preset-btn" onclick="clearOutfitChips()" style="color: #71717a;">✕ 비우기</button>
           </div>
 
-          <!-- Category 1: Hats & Hair Accessories -->
+          <!-- Category 1: Hats & Hair Accessories (Single Select) -->
           <div class="form-group" style="margin-bottom: 10px;">
             <div class="form-label">
-              <span>👒 모자 & 헤어 악세사리 (중복 체크 가능)</span>
-              <span style="font-size: 10px; font-weight: normal; color: #71717a;">다중 선택 후 자유롭게 추가 입력</span>
+              <span>👒 모자 &amp; 헤어 악세사리 (1개만 선택)</span>
+              <span class="mode-badge-single">● 단일 선택</span>
             </div>
-            <div class="chips-group" id="chips_headwear">
+            <div class="chips-group" id="chips_headwear" data-mode="single">
               <span class="chip active" data-val="red Santa hat with fluffy white trim">🎅 산타 모자</span>
               <span class="chip" data-val="cute fuzzy cat ears headband">🐱 고양이 귀</span>
               <span class="chip" data-val="pointed star-patterned wizard hat">🧙‍♂️ 뾰족 마법모</span>
@@ -1217,19 +1286,19 @@
               <span class="chip" data-val="over-ear tech headphones">🎧 헤드폰</span>
               <span class="chip" data-val="cute ribbon hair tie">🎀 리본 머리끈</span>
               <span class="chip" data-val="sleek cyber visor headset">🕶️ 사이버 바이저</span>
+              <span class="chip" data-val="no headwear">❌ 모자 없음</span>
             </div>
-            <input type="text" id="custom_headwear" placeholder="직접 추가 (예: tilted to the left, glowing star pin)" oninput="updatePrompt()">
+            <input type="text" id="custom_headwear" placeholder="모자/악세사리 직접 추가 (예: tilted to the left, glowing star pin)" oninput="updatePrompt()">
           </div>
 
-          <!-- Category 2: Outfits & Collars -->
+          <!-- Category 2: Outfits & Attire (Single Select) -->
           <div class="form-group" style="margin-bottom: 10px;">
             <div class="form-label">
-              <span>👗 착용 의상 & 옷깃 (중복 체크 가능)</span>
-              <span style="font-size: 10px; font-weight: normal; color: #71717a;">원하는 복장 요소들을 믹스매치</span>
+              <span>👗 착용 의상 (1개만 선택)</span>
+              <span class="mode-badge-single">● 단일 선택</span>
             </div>
-            <div class="chips-group" id="chips_outfit">
-              <span class="chip active" data-val="red Santa outfit">🎅 산타 복장</span>
-              <span class="chip active" data-val="fluffy white fur collar">❄️ 하얀 솜털 옷깃</span>
+            <div class="chips-group" id="chips_outfit" data-mode="single">
+              <span class="chip active" data-val="red Santa outfit with fluffy white fur collar">🎅 산타 복장</span>
               <span class="chip" data-val="traditional silk Hanbok robe">👘 비단 한복/도포</span>
               <span class="chip" data-val="celestial starry wizard robe with gold trim">🌌 별자리 로브</span>
               <span class="chip" data-val="polished silver plate armor">⚔️ 은빛 판금 갑옷</span>
@@ -1239,27 +1308,28 @@
               <span class="chip" data-val="high-tech combat jacket with neon piping">⚡ 네온 전투복</span>
               <span class="chip" data-val="velvet hooded cloak">🦇 벨벳 망토</span>
             </div>
-            <input type="text" id="custom_outfit" placeholder="직접 추가 (예: with gold button, embroidered patterns)" oninput="updatePrompt()">
+            <input type="text" id="custom_outfit" placeholder="의상 직접 추가 (예: elegant fantasy dress with gold embroidery)" oninput="updatePrompt()">
           </div>
 
-          <!-- Category 3: Props & Particles -->
+          <!-- Category 3: Props & Items (Single Select) -->
           <div class="form-group">
             <div class="form-label">
-              <span>🪄 손에 든 소품 & 파티클 (중복 체크 가능)</span>
-              <span style="font-size: 10px; font-weight: normal; color: #71717a;">소품과 반짝임 이펙트를 함께 체크</span>
+              <span>🪄 손에 든 소품 (1개만 선택)</span>
+              <span class="mode-badge-single">● 단일 선택</span>
             </div>
-            <div class="chips-group" id="chips_props">
+            <div class="chips-group" id="chips_props" data-mode="single">
               <span class="chip active" data-val="visibly holding a glowing golden star wand on the bottom left">⭐ 별 요술봉(들고있음)</span>
-              <span class="chip active" data-val="sparkling magical stars particles">✨ 반짝이는 별빛 파티클</span>
+              <span class="chip" data-val="sparkling magical stars particles around">✨ 반짝이는 별빛 파티클</span>
               <span class="chip" data-val="holding a crystal glass orb staff emitting mystic light">🔮 수정구 지팡이</span>
-              <span class="chip" data-val="holding a shining holy longsword and small shield">🗡️ 성검 & 방패</span>
+              <span class="chip" data-val="holding a shining holy longsword and small shield">🗡️ 성검 &amp; 방패</span>
               <span class="chip" data-val="holding a traditional folding fan">🪭 전통 부채</span>
               <span class="chip" data-val="holding a thick leather grimoire book">📖 마도서 책</span>
               <span class="chip" data-val="holding a cute wrapped gift box with ribbon">🎁 선물 상자</span>
               <span class="chip" data-val="holding a smartphone with charm strap">📱 스마트폰</span>
               <span class="chip" data-val="holding an energy beam dagger">⚡ 에너지 단검</span>
+              <span class="chip" data-val="no handheld props">❌ 소품 없음</span>
             </div>
-            <input type="text" id="custom_props" placeholder="직접 추가 (예: floating bubbles, tiny flame)" oninput="updatePrompt()">
+            <input type="text" id="custom_props" placeholder="소품 직접 추가 (예: holding a steaming coffee mug)" oninput="updatePrompt()">
           </div>
         </div>
       </div>
@@ -1411,6 +1481,22 @@
               </div>
               <div class="strict-mode-desc">
                 AI가 멋대로 상상하여 원본에 없는 판타지 갑옷, 발광 이펙트, 불필요한 장신구를 덧붙이거나 강제 1:1 왜곡하는 현상을 원천 봉인합니다.
+              </div>
+            </div>
+          </label>
+        </div>
+
+        <!-- Strict Native Model Enforcement Banner Panel -->
+        <div class="strict-mode-panel" id="panel_enforce_model" style="margin-top: 8px; border-color: rgba(99, 102, 241, 0.4); background: rgba(99, 102, 241, 0.08);">
+          <label class="strict-mode-label" for="chk_enforce_gen_model">
+            <input type="checkbox" id="chk_enforce_gen_model" checked onchange="updatePrompt()">
+            <div class="strict-mode-info">
+              <div class="strict-mode-title">
+                <span style="color: #a5b4fc;">🚫 파이썬/OpenCV 자체 변환 차단 &amp; 네이티브 생성 모델 강제</span>
+                <span class="strict-mode-badge" style="background: rgba(99, 102, 241, 0.2); border-color: rgba(99, 102, 241, 0.5); color: #c7d2fe;">강제 ON</span>
+              </div>
+              <div class="strict-mode-desc">
+                AI 에이전트가 코딩 도구를 써서 파이썬, OpenCV, PIL 스크립트로 다운샘플링하려는 시도를 원천 차단하고 오직 AI 이미지 생성 모델 도구만 사용하도록 강제합니다.
               </div>
             </div>
           </label>
@@ -1880,12 +1966,12 @@
       updatePrompt();
     }
 
-    // Outfit Full-Set Presets
+    // Outfit Full-Set Presets (Single-select per category)
     const OUTFIT_SETS = {
       santa: {
         head: ["red Santa hat with fluffy white trim"],
-        outfit: ["red Santa outfit", "fluffy white fur collar"],
-        props: ["visibly holding a glowing golden star wand on the bottom left", "sparkling magical stars particles"]
+        outfit: ["red Santa outfit with fluffy white fur collar"],
+        props: ["visibly holding a glowing golden star wand on the bottom left"]
       },
       hanbok: {
         head: ["traditional Korean Gat hat"],
@@ -1903,12 +1989,12 @@
         props: ["holding a shining holy longsword and small shield"]
       },
       school: {
-        head: ["classic navy beret", "cute ribbon hair tie"],
+        head: ["classic navy beret"],
         outfit: ["neat school uniform blazer and tie"],
-        props: []
+        props: ["no handheld props"]
       },
       casual: {
-        head: ["streetwear black beanie", "over-ear tech headphones"],
+        head: ["streetwear black beanie"],
         outfit: ["oversized cozy pastel hoodie"],
         props: ["holding a smartphone with charm strap"]
       },
@@ -1920,7 +2006,7 @@
       halloween: {
         head: ["pointed star-patterned wizard hat"],
         outfit: ["velvet hooded cloak"],
-        props: ["sparkling magical stars particles"]
+        props: ["sparkling magical stars particles around"]
       }
     };
 
@@ -2013,26 +2099,47 @@
         const fullType = customType || (typeChips.length > 0 ? typeChips[0] : "");
         if (fullType) charParts.push(fullType);
 
-        // 2. Hair (multi chips + custom)
-        const hairChips = getSelectedChips("chips_hair");
-        const customHair = document.getElementById("custom_hair").value.trim();
-        const allHair = [...hairChips];
-        if (customHair) allHair.push(customHair);
-        if (allHair.length > 0) charParts.push(`with ${allHair.join(', ')}`);
+        // 2. Hair Style & Color (single each + custom)
+        const hairStyleChips = getSelectedChips("chips_hair_style");
+        const customHairStyle = document.getElementById("custom_hair_style").value.trim();
+        const fullHairStyle = customHairStyle || (hairStyleChips.length > 0 ? hairStyleChips[0] : "");
 
-        // 3. Eyes (multi chips + custom)
-        const eyesChips = getSelectedChips("chips_eyes");
-        const customEyes = document.getElementById("custom_eyes").value.trim();
-        const allEyes = [...eyesChips];
-        if (customEyes) allEyes.push(customEyes);
-        if (allEyes.length > 0) charParts.push(allEyes.join(', '));
+        const hairColorChips = getSelectedChips("chips_hair_color");
+        const customHairColor = document.getElementById("custom_hair_color").value.trim();
+        const fullHairColor = customHairColor || (hairColorChips.length > 0 ? hairColorChips[0] : "");
 
-        // 4. Expression (multi chips + custom)
+        const hairItems = [];
+        if (fullHairStyle) hairItems.push(fullHairStyle);
+        if (fullHairColor) hairItems.push(fullHairColor);
+        if (hairItems.length > 0) charParts.push(`with ${hairItems.join(', ')}`);
+
+        // 3. Eyes Color & Shape (single each + custom)
+        const eyesColorChips = getSelectedChips("chips_eyes_color");
+        const customEyesColor = document.getElementById("custom_eyes_color").value.trim();
+        const fullEyesColor = customEyesColor || (eyesColorChips.length > 0 ? eyesColorChips[0] : "");
+
+        const eyesShapeChips = getSelectedChips("chips_eyes_shape");
+        const customEyesShape = document.getElementById("custom_eyes_shape").value.trim();
+        const fullEyesShape = customEyesShape || (eyesShapeChips.length > 0 ? eyesShapeChips[0] : "");
+
+        const eyesItems = [];
+        if (fullEyesShape) eyesItems.push(fullEyesShape);
+        if (fullEyesColor) eyesItems.push(fullEyesColor);
+        if (eyesItems.length > 0) charParts.push(eyesItems.join(', '));
+
+        // 4. Expression & Blush (single each + custom)
         const exprChips = getSelectedChips("chips_expression");
         const customExpr = document.getElementById("custom_expression").value.trim();
-        const allExpr = [...exprChips];
-        if (customExpr) allExpr.push(customExpr);
-        if (allExpr.length > 0) charParts.push(allExpr.join(', '));
+        const fullExpr = customExpr || (exprChips.length > 0 ? exprChips[0] : "");
+
+        const blushChips = getSelectedChips("chips_blush");
+        const customBlush = document.getElementById("custom_blush").value.trim();
+        const fullBlush = customBlush || (blushChips.length > 0 ? blushChips[0] : "");
+
+        const exprItems = [];
+        if (fullExpr) exprItems.push(fullExpr);
+        if (fullBlush && fullBlush !== "clean cheeks without blush") exprItems.push(fullBlush);
+        if (exprItems.length > 0) charParts.push(exprItems.join(', '));
 
         if (charParts.length > 0) {
           parts.push(charParts.join(', '));
@@ -2046,26 +2153,29 @@
       } else {
         const outfitParts = [];
 
-        // Headwear chips + custom
+        // Headwear (single chip + custom)
         const headChips = getSelectedChips("chips_headwear");
         const customHead = document.getElementById("custom_headwear").value.trim();
-        const allHead = [...headChips];
-        if (customHead) allHead.push(customHead);
-        if (allHead.length > 0) outfitParts.push(`wearing ${allHead.join(', ')}`);
+        const fullHead = customHead || (headChips.length > 0 ? headChips[0] : "");
+        if (fullHead && fullHead !== "no headwear") {
+          outfitParts.push(`wearing ${fullHead}`);
+        }
 
-        // Outfit chips + custom
+        // Outfit (single chip + custom)
         const bodyChips = getSelectedChips("chips_outfit");
         const customOutfit = document.getElementById("custom_outfit").value.trim();
-        const allOutfit = [...bodyChips];
-        if (customOutfit) allOutfit.push(customOutfit);
-        if (allOutfit.length > 0) outfitParts.push(allOutfit.join(', '));
+        const fullOutfit = customOutfit || (bodyChips.length > 0 ? bodyChips[0] : "");
+        if (fullOutfit) {
+          outfitParts.push(`dressed in ${fullOutfit}`);
+        }
 
-        // Props chips + custom
+        // Props (single chip + custom)
         const propsChips = getSelectedChips("chips_props");
         const customProps = document.getElementById("custom_props").value.trim();
-        const allProps = [...propsChips];
-        if (customProps) allProps.push(customProps);
-        if (allProps.length > 0) outfitParts.push(allProps.join(', '));
+        const fullProps = customProps || (propsChips.length > 0 ? propsChips[0] : "");
+        if (fullProps && fullProps !== "no handheld props") {
+          outfitParts.push(fullProps);
+        }
 
         if (outfitParts.length > 0) {
           parts.push(outfitParts.join(', '));
@@ -2125,6 +2235,12 @@
         parts.push(`seamlessly replace and cleanly re-render any existing burned-in subtitle text from the reference image with this crisp pixel art text overlay, strictly avoiding duplicate text or overlapping captions`);
       }
 
+      // Step 6: Native Image Model Enforcement & OpenCV/Python Ban
+      const enforceModel = document.getElementById('chk_enforce_gen_model') && document.getElementById('chk_enforce_gen_model').checked;
+      if (enforceModel) {
+        parts.push("CRITICAL EXECUTION MANDATE: Synthesize and generate this artwork EXCLUSIVELY using native generative AI image models/tools (e.g., DALL-E 3, Imagen, Midjourney, generate_image diffusion tool). STRICTLY PROHIBITED: Do NOT write, execute, or use Python, OpenCV, PIL, downsampling scripts, or algorithmic pixelation code. The final image must be produced directly through model diffusion synthesis");
+      }
+
       // Step 6: Strict 1:1 & Quality/Negatives
       const isStrict = document.getElementById('chk_strict_mode') && document.getElementById('chk_strict_mode').checked;
       if (isStrict) {
@@ -2132,6 +2248,7 @@
       }
 
       const negMain = [];
+      if (enforceModel) negMain.push('python code, python script, opencv downsampling, pil pixelation filter, code execution, algorithmic post-processing');
       if (document.getElementById('neg_text').checked && activeTexts.length === 0) negMain.push('no text');
       if (document.getElementById('neg_watermark').checked) negMain.push('no watermark');
       if (document.getElementById('neg_blur').checked) negMain.push('no blur, no anti-aliasing');
@@ -2147,8 +2264,12 @@
         parts.push(`Target output formats: deliver final assets as ${targetFormats.join(', ')} files`);
       }
 
-      // Strictly Respond in Korean
-      parts.push(`Please provide all responses and explanations strictly in Korean (모든 답변과 안내는 반드시 한국어로 작성해 주세요)`);
+      // Strictly Respond in Korean & Enforce Model
+      if (enforceModel) {
+        parts.push(`Please provide all responses and explanations strictly in Korean (모든 답변과 안내는 반드시 한국어로 작성해 주세요. 또한 파이썬 스크립트나 OpenCV/PIL 등의 코드 기반 이미지 변환 처리를 절대 시도하지 마시고, 반드시 생성형 AI 모델 본연의 이미지 생성 도구로 결과 이미지를 직접 생성해 주세요)`);
+      } else {
+        parts.push(`Please provide all responses and explanations strictly in Korean (모든 답변과 안내는 반드시 한국어로 작성해 주세요)`);
+      }
 
       const full = parts.join('. ') + '.';
       document.getElementById('finalPrompt').value = full;
@@ -2158,6 +2279,7 @@
 
       // Dedicated Negative
       const negList = [];
+      if (enforceModel) negList.push('python code', 'python script', 'opencv downsampling', 'pil pixelation filter', 'code execution', 'algorithmic post-processing');
       if (document.getElementById('neg_text').checked && activeTexts.length === 0) negList.push('text', 'letters', 'subtitles', 'alphabet');
       if (document.getElementById('neg_watermark').checked) negList.push('watermark', 'signature', 'logo', 'username');
       if (document.getElementById('neg_blur').checked) negList.push('blur', 'anti-aliasing', 'soft gradients', 'unfocused');
@@ -2266,13 +2388,19 @@
 
       // Reset Step 2 custom inputs & chips
       document.getElementById('custom_char_type').value = "";
-      document.getElementById('custom_hair').value = "";
-      document.getElementById('custom_eyes').value = "";
+      document.getElementById('custom_hair_style').value = "";
+      document.getElementById('custom_hair_color').value = "";
+      document.getElementById('custom_eyes_color').value = "";
+      document.getElementById('custom_eyes_shape').value = "";
       document.getElementById('custom_expression').value = "";
+      document.getElementById('custom_blush').value = "";
       setChips("chips_char_type", ["cute chibi anime girl"]);
-      setChips("chips_hair", ["bob haircut", "straight bangs", "brown hair"]);
-      setChips("chips_eyes", ["large sparkling eyes", "brown eyes"]);
-      setChips("chips_expression", ["cute happy open smile showing teeth", "soft peach blush cheeks"]);
+      setChips("chips_hair_style", ["bob haircut with straight bangs"]);
+      setChips("chips_hair_color", ["brown hair"]);
+      setChips("chips_eyes_color", ["brown eyes"]);
+      setChips("chips_eyes_shape", ["large sparkling anime eyes"]);
+      setChips("chips_expression", ["cute happy open smile showing teeth"]);
+      setChips("chips_blush", ["soft peach blush cheeks"]);
 
       // Reset Step 4 custom inputs & chips
       document.getElementById('custom_framing').value = "";
@@ -2303,6 +2431,9 @@
       userNegTextPref = true;
       const chkStrict = document.getElementById('chk_strict_mode');
       if (chkStrict) chkStrict.checked = true;
+
+      const chkEnforce = document.getElementById('chk_enforce_gen_model');
+      if (chkEnforce) chkEnforce.checked = true;
 
       const negText = document.getElementById('neg_text');
       if (negText) {
