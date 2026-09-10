@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" data-studio="pixel">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PixelPrompt Studio</title>
+  <title>GotchaPrompt</title>
   <link rel="icon" type="image/x-icon" href="assets/app_icon.ico">
   <link rel="icon" type="image/png" href="assets/app_icon.png">
   <style>
-    :root {
+    :root, [data-studio="pixel"] {
       --bg-body: #09090b;
       --bg-card: #121215;
       --bg-subtle: #0d0d10;
@@ -33,9 +33,19 @@
       --toggle-bg: #18181b;
       --toggle-hover: #27272a;
       --toggle-border: #27272a;
+
+      /* Pixel Studio Accent (Retro Rose & Emerald) */
+      --studio-accent: #f43f5e;
+      --studio-accent-hover: #fb7185;
+      --studio-accent-gradient: linear-gradient(135deg, #f43f5e, #e11d48);
+      --studio-accent-gradient-hover: linear-gradient(135deg, #fb7185, #f43f5e);
+      --studio-accent-subtle: rgba(244, 63, 94, 0.15);
+      --studio-accent-border: rgba(244, 63, 94, 0.35);
+      --studio-badge-bg: rgba(244, 63, 94, 0.15);
+      --studio-badge-color: #fb7185;
     }
 
-    [data-theme="light"] {
+    [data-theme="light"], [data-theme="light"][data-studio="pixel"] {
       --bg-body: #f1f3f5;
       --bg-card: #ffffff;
       --bg-subtle: #f8f9fa;
@@ -61,6 +71,42 @@
       --toggle-bg: #ffffff;
       --toggle-hover: #f1f3f5;
       --toggle-border: #dee2e6;
+
+      --studio-accent: #e11d48;
+      --studio-accent-hover: #f43f5e;
+      --studio-accent-gradient: linear-gradient(135deg, #f43f5e, #e11d48);
+      --studio-accent-gradient-hover: linear-gradient(135deg, #fb7185, #f43f5e);
+      --studio-accent-subtle: rgba(225, 29, 72, 0.12);
+      --studio-accent-border: rgba(225, 29, 72, 0.3);
+      --studio-badge-bg: rgba(225, 29, 72, 0.12);
+      --studio-badge-color: #e11d48;
+    }
+
+    /* Icon Studio Distinct Theme Variables (Modern Sky Blue & Indigo) */
+    [data-studio="icon"] {
+      --chip-active-text: #38bdf8;
+      --preset-active-text: #bae6fd;
+      --studio-accent: #0284c7;
+      --studio-accent-hover: #38bdf8;
+      --studio-accent-gradient: linear-gradient(135deg, #0284c7, #2563eb);
+      --studio-accent-gradient-hover: linear-gradient(135deg, #38bdf8, #0284c7);
+      --studio-accent-subtle: rgba(14, 165, 233, 0.15);
+      --studio-accent-border: rgba(14, 165, 233, 0.35);
+      --studio-badge-bg: rgba(14, 165, 233, 0.15);
+      --studio-badge-color: #38bdf8;
+    }
+
+    [data-theme="light"][data-studio="icon"] {
+      --chip-active-text: #0284c7;
+      --preset-active-text: #0284c7;
+      --studio-accent: #0284c7;
+      --studio-accent-hover: #0369a1;
+      --studio-accent-gradient: linear-gradient(135deg, #0284c7, #2563eb);
+      --studio-accent-gradient-hover: linear-gradient(135deg, #38bdf8, #0284c7);
+      --studio-accent-subtle: rgba(2, 132, 199, 0.12);
+      --studio-accent-border: rgba(2, 132, 199, 0.3);
+      --studio-badge-bg: rgba(2, 132, 199, 0.12);
+      --studio-badge-color: #0284c7;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -84,6 +130,15 @@
     ::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: 3px; }
     ::-webkit-scrollbar-thumb:hover { background: var(--scrollbar-thumb-hover); }
 
+    /* Top Sticky Navigation Wrapper */
+    .top-nav-wrapper {
+      position: sticky;
+      top: 0;
+      z-index: 25;
+      background: var(--bg-card);
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+    }
+
     /* Header */
     header {
       background: var(--bg-card);
@@ -92,10 +147,37 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      position: sticky;
-      top: 0;
-      z-index: 20;
       transition: background-color 0.2s ease, border-color 0.2s ease;
+    }
+
+    /* Sub-Header Bar (Studio Switcher) */
+    .sub-header-bar {
+      background: var(--bg-inner);
+      border-bottom: 1px solid var(--border-main);
+      padding: 6px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      transition: background-color 0.2s ease, border-color 0.2s ease;
+    }
+    .sub-header-container {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 12px;
+      width: 100%;
+      max-width: 1500px;
+      margin: 0 auto;
+    }
+    .sub-header-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-dim);
+      letter-spacing: -0.2px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      user-select: none;
     }
     .brand {
       display: flex;
@@ -208,6 +290,14 @@
       background: linear-gradient(135deg, #f43f5e, #fb7185);
       border-color: #f43f5e;
     }
+    [data-studio="icon"] .theme-switch input:checked + .slider,
+    [data-studio="icon"] input:checked + .slider {
+      background: linear-gradient(135deg, #0284c7, #38bdf8) !important;
+      border-color: #0284c7 !important;
+    }
+    [data-studio="icon"] .theme-switch-container:hover {
+      border-color: #0284c7;
+    }
     input:checked + .slider::before {
       transform: translateX(16px);
     }
@@ -230,7 +320,7 @@
       flex-direction: column;
       gap: 12px;
       overflow-y: auto;
-      max-height: calc(100vh - 82px);
+      max-height: calc(100vh - 128px);
       padding-right: 4px;
     }
     .card {
@@ -857,7 +947,7 @@
       padding: 14px;
       display: flex;
       flex-direction: column;
-      height: calc(100vh - 82px);
+      height: calc(100vh - 128px);
       transition: background-color 0.2s ease, border-color 0.2s ease;
     }
     .output-header {
@@ -894,7 +984,7 @@
     .btn-row { display: flex; gap: 6px; margin-bottom: 10px; }
     .btn-copy {
       flex: 1;
-      background: linear-gradient(135deg, #f43f5e, #e11d48);
+      background: var(--studio-accent-gradient);
       border: none;
       border-radius: 7px;
       color: #ffffff;
@@ -906,10 +996,10 @@
       align-items: center;
       justify-content: center;
       gap: 6px;
-      box-shadow: 0 4px 12px rgba(244, 63, 94, 0.25);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
       transition: all 0.15s ease;
     }
-    .btn-copy:hover { background: linear-gradient(135deg, #fb7185, #f43f5e); }
+    .btn-copy:hover { background: var(--studio-accent-gradient-hover); }
     .btn-reset {
       background: var(--btn-reset-bg);
       border: none;
@@ -940,7 +1030,7 @@
     .neg-copy-btn {
       background: none;
       border: none;
-      color: #f43f5e;
+      color: var(--studio-accent);
       font-size: 10px;
       cursor: pointer;
       text-decoration: underline;
@@ -995,38 +1085,237 @@
       color: var(--text-main);
     }
     .fmt-btn.active {
-      background: rgba(244, 63, 94, 0.18);
-      border-color: #f43f5e;
-      color: #fb7185;
+      background: var(--studio-accent-subtle);
+      border-color: var(--studio-accent);
+      color: var(--studio-accent-hover);
+    }
+
+    /* Studio Switcher Tabs */
+    .studio-switcher {
+      display: inline-flex;
+      align-items: center;
+      background: var(--bg-input);
+      border: 1px solid var(--border-main);
+      border-radius: 24px;
+      padding: 3px;
+      gap: 3px;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+    }
+    .studio-tab-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 12px;
+      border-radius: 20px;
+      border: 1px solid transparent;
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .studio-tab-btn:hover {
+      color: var(--text-main);
+      background: var(--bg-input-hover);
+    }
+    .studio-tab-btn.active {
+      color: #ffffff;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+    }
+    #btn_tab_pixel.active {
+      background: linear-gradient(135deg, #9333ea, #f43f5e);
+      border-color: rgba(244, 63, 94, 0.4);
+    }
+    #btn_tab_icon.active {
+      background: linear-gradient(135deg, #0284c7, #2563eb);
+      border-color: rgba(14, 165, 233, 0.4);
+    }
+    .studio-tab-badge {
+      font-size: 9px;
+      padding: 1px 5px;
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.18);
+      font-weight: 600;
+      letter-spacing: 0.2px;
+    }
+
+    /* Icon Studio Blue Theme Overrides (Complete Red Isolation) */
+    [data-studio="icon"] .radio-card.active {
+      border-color: #0284c7;
+      background: rgba(2, 132, 199, 0.08);
+    }
+    [data-studio="icon"] .radio-card:hover {
+      border-color: rgba(2, 132, 199, 0.6);
+    }
+    [data-studio="icon"] .radio-card input[type="radio"] {
+      accent-color: #0284c7;
+    }
+    [data-studio="icon"] input[type="text"]:focus,
+    [data-studio="icon"] select:focus,
+    [data-studio="icon"] textarea#finalPrompt:focus {
+      border-color: #0284c7;
+      box-shadow: 0 0 0 1px rgba(2, 132, 199, 0.3);
+    }
+    [data-studio="icon"] .chips-group[data-mode="single"] .chip.active {
+      background: rgba(2, 132, 199, 0.16);
+      border-color: #0284c7;
+      color: #38bdf8;
+      font-weight: 700;
+    }
+    [data-theme="light"][data-studio="icon"] .chips-group[data-mode="single"] .chip.active {
+      color: #0284c7;
+    }
+    [data-studio="icon"] .chip.active {
+      background: rgba(2, 132, 199, 0.15);
+      border-color: #0284c7;
+      color: #38bdf8;
+      font-weight: 600;
+    }
+    [data-theme="light"][data-studio="icon"] .chip.active {
+      color: #0284c7;
+    }
+    [data-studio="icon"] .chip:hover {
+      border-color: rgba(2, 132, 199, 0.6);
+      color: var(--text-main);
+    }
+    [data-studio="icon"] .mode-badge-single {
+      color: #38bdf8;
+      background: rgba(2, 132, 199, 0.12);
+      border-color: rgba(2, 132, 199, 0.3);
+    }
+    [data-theme="light"][data-studio="icon"] .mode-badge-single {
+      color: #0284c7;
+    }
+    [data-studio="icon"] .mode-badge-multi {
+      color: #38bdf8;
+      background: rgba(2, 132, 199, 0.12);
+      border-color: rgba(2, 132, 199, 0.3);
+    }
+    [data-theme="light"][data-studio="icon"] .mode-badge-multi {
+      color: #0284c7;
+    }
+    [data-studio="icon"] .outfit-preset-btn.active {
+      background: rgba(2, 132, 199, 0.2);
+      border-color: #0284c7;
+      color: #bae6fd;
+    }
+    [data-theme="light"][data-studio="icon"] .outfit-preset-btn.active {
+      color: #0284c7;
+    }
+    [data-studio="icon"] .outfit-preset-btn:hover {
+      border-color: rgba(2, 132, 199, 0.6);
+    }
+    [data-studio="icon"] .check-item input[type="checkbox"] {
+      accent-color: #0284c7;
+    }
+    [data-studio="icon"] .check-item:hover {
+      border-color: rgba(2, 132, 199, 0.6);
+    }
+    [data-studio="icon"] .strict-mode-panel {
+      background: rgba(2, 132, 199, 0.08);
+      border-color: rgba(2, 132, 199, 0.35);
+    }
+    [data-studio="icon"] .strict-mode-panel:hover {
+      border-color: #0284c7;
+      background: rgba(2, 132, 199, 0.12);
+    }
+    [data-studio="icon"] .strict-mode-label input[type="checkbox"] {
+      accent-color: #0284c7;
+    }
+    [data-studio="icon"] .strict-mode-title {
+      color: #38bdf8;
+    }
+    [data-theme="light"][data-studio="icon"] .strict-mode-title {
+      color: #0284c7;
+    }
+    [data-studio="icon"] .strict-mode-badge {
+      color: #38bdf8;
+      background: rgba(2, 132, 199, 0.15);
+      border-color: rgba(2, 132, 199, 0.35);
+    }
+    .domain-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-bottom: 8px;
+    }
+    .domain-tab-btn {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 8px;
+      border-radius: 5px;
+      background: var(--bg-input);
+      border: 1px solid var(--border-main);
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .domain-tab-btn:hover {
+      border-color: #0284c7;
+      color: var(--text-main);
+    }
+    .domain-tab-btn.active {
+      background: rgba(2, 132, 199, 0.18);
+      border-color: #0284c7;
+      color: #38bdf8;
+      font-weight: 700;
+    }
+    [data-theme="light"] .domain-tab-btn.active {
+      color: #0284c7;
     }
   </style>
 </head>
 <body>
 
-  <header>
-    <div class="brand">
-      <div class="brand-icon">👾</div>
-      <div>
-        <div class="brand-title">
-          PixelPrompt Studio
-          <span class="badge">DirectX 60fps</span>
+  <!-- Top Sticky Navigation Wrapper -->
+  <div class="top-nav-wrapper">
+    <header>
+      <div class="brand">
+        <div class="brand-icon" id="brandIcon">👾</div>
+        <div>
+          <div class="brand-title">
+            <span id="brandTitleText">GotchaPrompt</span>
+            <span class="badge" id="brandBadge">DirectX 60fps</span>
+          </div>
+          <div class="brand-desc" id="brandDescText">정밀하게 깎고 다듬어, 한 방에 갓챠! (6단계 픽셀 &amp; 아이콘 프롬프트 스튜디오)</div>
         </div>
-        <div class="brand-desc">6단계 고해상도 도트 프롬프트 빌더 (원본 1:1 엄격 보존 &amp; 자막 오버레이 &amp; 의상 믹스매치)</div>
       </div>
-    </div>
-    <label class="theme-switch-container" for="themeSwitch" title="다크 / 라이트 모드 전환">
-      <span class="theme-icon-label active" id="themeDarkIcon">🌙</span>
-      <span class="theme-switch">
-        <input type="checkbox" id="themeSwitch" onchange="onThemeSwitchChange(event)">
-        <span class="slider"></span>
-      </span>
-      <span class="theme-icon-label" id="themeLightIcon">☀️</span>
-      <span class="theme-text" id="themeModeText">다크 모드</span>
-    </label>
-  </header>
+
+      <label class="theme-switch-container" for="themeSwitch" title="다크 / 라이트 모드 전환">
+        <span class="theme-icon-label active" id="themeDarkIcon">🌙</span>
+        <span class="theme-switch">
+          <input type="checkbox" id="themeSwitch" onchange="onThemeSwitchChange(event)">
+          <span class="slider"></span>
+        </span>
+        <span class="theme-icon-label" id="themeLightIcon">☀️</span>
+        <span class="theme-text" id="themeModeText">다크 모드</span>
+      </label>
+    </header>
+
+    <!-- Sub Header Bar: Studio Mode Switcher -->
+    <nav class="sub-header-bar" id="subHeaderBar" aria-label="스튜디오 모드 선택">
+      <div class="sub-header-container">
+        <span class="sub-header-label">🎨 스튜디오 모드:</span>
+        <div class="studio-switcher" id="studioSwitcher">
+          <button type="button" class="studio-tab-btn active" id="btn_tab_pixel" onclick="switchStudio('pixel')">
+            <span>👾</span>
+            <span>픽셀 스튜디오</span>
+            <span class="studio-tab-badge">Pixel 8/16-bit</span>
+          </button>
+          <button type="button" class="studio-tab-btn" id="btn_tab_icon" onclick="switchStudio('icon')">
+            <span>📐</span>
+            <span>아이콘 스튜디오</span>
+            <span class="studio-tab-badge">Vector &amp; UI</span>
+          </button>
+        </div>
+      </div>
+    </nav>
+  </div>
 
   <main>
-    <div class="steps-container">
+    <!-- Studio 1: Pixel Steps Container -->
+    <div class="steps-container" id="pixel_steps_container">
 
       <!-- STEP 1 -->
       <div class="card">
@@ -1533,12 +1822,305 @@
 
     </div>
 
+    <!-- Studio 2: Icon Steps Container -->
+    <div class="steps-container" id="icon_steps_container" style="display: none;">
+
+      <!-- CATEGORY 1: 핵심 피사체 및 도상학적 메타포 (Subject & Metaphor) -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <div class="step-num" style="background: linear-gradient(135deg, #0284c7, #2563eb);">1</div>
+            핵심 피사체 &amp; 도상학적 메타포 (Subject &amp; Metaphor)
+          </div>
+          <span style="font-size: 11px; color: #71717a;">도상학 6대 분류 &amp; 1클릭 프리셋</span>
+        </div>
+
+        <!-- Official Report Presets & Suite Presets -->
+        <div class="outfit-presets-bar">
+          <span style="font-size: 11px; font-weight: 700; color: #a1a1aa; margin-right: 4px;">⚡ 프리셋 세트:</span>
+          <button type="button" class="outfit-preset-btn active" id="btn_icon_pre_a" onclick="applyIconPreset('example_a')">🍎 공식 예시 A: iOS 설정 (SF Symbols 계층형)</button>
+          <button type="button" class="outfit-preset-btn" id="btn_icon_pre_b" onclick="applyIconPreset('example_b')">🌤️ 공식 예시 B: 모바일 날씨 (M3 투톤/GRAD)</button>
+          <button type="button" class="outfit-preset-btn" id="btn_icon_pre_editor" onclick="applyIconPreset('editor_suite')">📝 에디터 6종 세트</button>
+          <button type="button" class="outfit-preset-btn" id="btn_icon_pre_sys" onclick="applyIconPreset('sys_nav')">🧭 시스템 내비 (5종)</button>
+          <button type="button" class="outfit-preset-btn" id="btn_icon_pre_file" onclick="applyIconPreset('file_ops')">📁 파일 관리 (5종)</button>
+          <button type="button" class="outfit-preset-btn" onclick="clearIconInput()" style="color: #71717a;">✕ 비우기</button>
+        </div>
+
+        <!-- Custom Keyword Input Area -->
+        <div class="form-group" style="margin-bottom: 10px;">
+          <div class="form-label">
+            <span>🔤 생성할 아이콘 및 메타포 설명 (자유롭게 입력하거나 아래 칩 클릭)</span>
+            <span class="mode-badge-multi">✓ 한글/영어 자동 인식</span>
+          </div>
+          <input type="text" id="input_icon_keywords" value="Gear wheel icon representing system settings" placeholder="예: Gear wheel icon representing system settings" oninput="updateIconPrompt()">
+        </div>
+
+        <!-- 6 Domain Sub-Categories with Click-to-Append -->
+        <div class="form-group">
+          <div class="form-label">
+            <span>💡 6대 도상학 분류 빠른 추가 (클릭 시 입력창에 메타포 자동 추가)</span>
+          </div>
+          
+          <!-- Domain Sub Tabs -->
+          <div class="domain-tabs" id="icon_domain_tabs">
+            <button type="button" class="domain-tab-btn active" onclick="switchDomainTab('nav')">🧭 1. Navigation (내비)</button>
+            <button type="button" class="domain-tab-btn" onclick="switchDomainTab('action')">⚡ 2. Action (액션)</button>
+            <button type="button" class="domain-tab-btn" onclick="switchDomainTab('comm')">💬 3. Communication (소통)</button>
+            <button type="button" class="domain-tab-btn" onclick="switchDomainTab('sys')">⚙️ 4. System (기기/시스템)</button>
+            <button type="button" class="domain-tab-btn" onclick="switchDomainTab('weather')">⛅ 5. Weather (날씨/환경)</button>
+            <button type="button" class="domain-tab-btn" onclick="switchDomainTab('abstract')">📐 6. Abstract (기능/추상)</button>
+          </div>
+
+          <!-- Domain 1: Navigation -->
+          <div class="chips-group domain-chips-panel" id="domain_panel_nav">
+            <span class="chip" onclick="appendIconKeyword('Compass icon pointing north for direction')">🧭 나침반 (Compass)</span>
+            <span class="chip" onclick="appendIconKeyword('Arrow navigation indicator with balanced chevron')">➡️ 화살표 (Arrow / Direction)</span>
+            <span class="chip" onclick="appendIconKeyword('Minimal house silhouette representing home')">🏠 홈 (Home)</span>
+            <span class="chip" onclick="appendIconKeyword('Folded map outline with location pin')">🗺️ 지도 (Map &amp; Pin)</span>
+            <span class="chip" onclick="appendIconKeyword('Three horizontal stacked bars for hamburger menu')">☰ 메뉴 (Hamburger Menu)</span>
+          </div>
+
+          <!-- Domain 2: Action -->
+          <div class="chips-group domain-chips-panel" id="domain_panel_action" style="display: none;">
+            <span class="chip" onclick="appendIconKeyword('Magnifying glass with circular lens and angled handle')">🔍 검색 (Magnifying Glass)</span>
+            <span class="chip" onclick="appendIconKeyword('Diagonal edit pencil with sharp nib')">✏️ 편집 / 펜 (Edit Pencil)</span>
+            <span class="chip" onclick="appendIconKeyword('Trash can outline with removable lid')">🗑️ 삭제 (Trash Can)</span>
+            <span class="chip" onclick="appendIconKeyword('Branching node share symbol with connected dots')">🔗 공유 (Share Nodes)</span>
+            <span class="chip" onclick="appendIconKeyword('Centered plus (+) cross for create and add')">➕ 추가 / 생성 (Plus)</span>
+          </div>
+
+          <!-- Domain 3: Communication -->
+          <div class="chips-group domain-chips-panel" id="domain_panel_comm" style="display: none;">
+            <span class="chip" onclick="appendIconKeyword('Speech bubble with rounded corners and bottom tail')">💬 말풍선 (Speech Bubble)</span>
+            <span class="chip" onclick="appendIconKeyword('Folded rectangular letter envelope')">✉️ 편지 / 메일 (Envelope)</span>
+            <span class="chip" onclick="appendIconKeyword('Curved bell shape with small bottom clapper')">🔔 알림 (Notification Bell)</span>
+            <span class="chip" onclick="appendIconKeyword('Audio microphone outline with small base stand')">🎙️ 마이크 (Microphone)</span>
+          </div>
+
+          <!-- Domain 4: System -->
+          <div class="chips-group domain-chips-panel" id="domain_panel_sys" style="display: none;">
+            <span class="chip" onclick="appendIconKeyword('6-tooth gear wheel icon representing system settings')">⚙️ 설정 (Gear Wheel)</span>
+            <span class="chip" onclick="appendIconKeyword('Horizontal battery cylinder with cathode terminal')">🔋 배터리 (Battery)</span>
+            <span class="chip" onclick="appendIconKeyword('Concentric radiating arc waves for Wi-Fi signal')">📶 와이파이 (Wi-Fi)</span>
+            <span class="chip" onclick="appendIconKeyword('Vertical slider control tracks with indicator handles')">🎛️ 슬라이더 조절 (Sliders)</span>
+            <span class="chip" onclick="appendIconKeyword('Padlock outline with curved shackle')">🔒 보안 / 잠금 (Security Lock)</span>
+            <span class="chip" onclick="appendIconKeyword('1:1 square floppy disk with top shutter for save')">💾 플로피 디스크 (Floppy Disk)</span>
+          </div>
+
+          <!-- Domain 5: Weather -->
+          <div class="chips-group domain-chips-panel" id="domain_panel_weather" style="display: none;">
+            <span class="chip" onclick="appendIconKeyword('Central sun circle surrounded by radiating triangular rays')">☀️ 태양 (Sun)</span>
+            <span class="chip" onclick="appendIconKeyword('Fluffy cloud silhouette with flat bottom')">☁️ 구름 (Cloud)</span>
+            <span class="chip" onclick="appendIconKeyword('Cloud with diagonal rain streaks below')">🌧️ 비구름 (Rain Cloud)</span>
+            <span class="chip" onclick="appendIconKeyword('Angled lightning bolt spark of electricity')">⚡ 번개 (Lightning Bolt)</span>
+            <span class="chip" onclick="appendIconKeyword('Hexagonal symmetrical crystal snowflake')">❄️ 눈송이 (Snowflake)</span>
+          </div>
+
+          <!-- Domain 6: Abstract -->
+          <div class="chips-group domain-chips-panel" id="domain_panel_abstract" style="display: none;">
+            <span class="chip" onclick="appendIconKeyword('Isometric stacked layer planes')">📚 레이어 (Layers)</span>
+            <span class="chip" onclick="appendIconKeyword('Code brackets (&lt;/&gt;) with forward slash')">💻 코드 브래킷 (&lt;/&gt;)</span>
+            <span class="chip" onclick="appendIconKeyword('Cylindrical database stack with horizontal dividers')">🗄️ 데이터베이스 (Database)</span>
+            <span class="chip" onclick="appendIconKeyword('Dual continuous circular curved arrows forming an unbroken loop for toggle actions')">🔄 순환 루프 (Switch Loop)</span>
+            <span class="chip" onclick="appendIconKeyword('Square document outline with center divider, left 5 lines, right mountain and sun')">🌗 분할 뷰 (Split View)</span>
+            <span class="chip" onclick="appendIconKeyword('Square document outline with centered mountain and sun')">🖼️ 액자 / 프리뷰 (Preview Frame)</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- CATEGORY 2: 구조적 변형 및 UI 상태 (Structural Variant & State) -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <div class="step-num" style="background: linear-gradient(135deg, #0284c7, #2563eb);">2</div>
+            구조적 변형 &amp; UI 상태 (Structural Variant &amp; State)
+          </div>
+          <span class="mode-badge-single">● 단일 선택</span>
+        </div>
+        <div class="chips-group" id="chips_icon_variant" data-mode="single">
+          <span class="chip active" data-val="outline vector glyph, clean uniform stroke contours, hollow geometry">⭕ 선형 윤곽선 (Outline / Line)</span>
+          <span class="chip" data-val="solid filled icon silhouette, clean solid geometric mass, high optical weight">⬛ 면 채움 솔리드 (Solid Fill)</span>
+          <span class="chip" data-val="slashed disabled variant with sharp 45-degree diagonal strike-through slash cutting across the primary symbol">🚫 차단 / 비활성 슬래시 (Slashed / Disabled)</span>
+          <span class="chip" data-val="enclosed inside a rounded rectangle badge container frame with smooth corner radius">🛡️ 컨테이너 배지 내장 (Enclosed Badge)</span>
+          <span class="chip" data-val="multi-layer stacked overlapping structure with distinct foreground and background visual depths">📑 멀티레이어 중첩 (Multi-Layer Stack)</span>
+        </div>
+      </div>
+
+      <!-- CATEGORY 3: 선 두께 및 광학 스케일 (Stroke Weight & Optical Scale) -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <div class="step-num" style="background: linear-gradient(135deg, #0284c7, #2563eb);">3</div>
+            선 두께 &amp; 광학 스케일 (Stroke Weight &amp; Optical Scale)
+          </div>
+          <span class="mode-badge-single">● 가변 축 wght &amp; opsz</span>
+        </div>
+
+        <!-- 1. Weight -->
+        <div class="form-group" style="margin-bottom: 10px;">
+          <div class="form-label">
+            <span>✏️ 선 두께 (Stroke Weight - wght 축)</span>
+            <span class="mode-badge-single">● 단일 선택</span>
+          </div>
+          <div class="chips-group" id="chips_icon_weight" data-mode="single">
+            <span class="chip" data-val="ultra-light hairline stroke width (wght 100-200), delicate thin line aesthetic">극세선 헤어라인 (wght 100-200)</span>
+            <span class="chip active" data-val="standard regular 2px stroke width (wght 400-500), balanced line harmony">표준 레귤러 (wght 400-500 - 기본)</span>
+            <span class="chip" data-val="bold heavy stroke width (wght 700), strong visual weight and prominent presence">볼드 헤비 (wght 700)</span>
+          </div>
+        </div>
+
+        <!-- 2. Optical Size -->
+        <div class="form-group">
+          <div class="form-label">
+            <span>🔍 광학 스케일 (Optical Size - opsz 축)</span>
+            <span class="mode-badge-single">● 단일 선택</span>
+          </div>
+          <div class="chips-group" id="chips_icon_scale" data-mode="single">
+            <span class="chip" data-val="micro scale (opsz 20dp, simplified geometry, generous counter spaces, bold terminals)">마이크로 20dp (opsz 20dp: 단순형상·넓은 내부)</span>
+            <span class="chip active" data-val="standard scale (opsz 24dp, standard UI body)">표준 24dp (opsz 24dp: 본문 표준 UI 규격)</span>
+            <span class="chip" data-val="display hero scale (opsz 48dp, fine nuances, subtle curves)">디스플레이 48dp (opsz 48dp: 히어로·정밀곡선)</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- CATEGORY 4: 컬러 팔레트 및 렌더링 모드 (Color & Rendering Mode) -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <div class="step-num" style="background: linear-gradient(135deg, #0284c7, #2563eb);">4</div>
+            컬러 팔레트 &amp; 렌더링 모드 (Color &amp; Rendering Mode)
+          </div>
+          <span class="mode-badge-single">● 단일 선택</span>
+        </div>
+        <div class="chips-group" id="chips_icon_color_mode" data-mode="single">
+          <span class="chip active" data-val="monochrome flat dark charcoal / black on pure white background, high contrast, clean vector cutout">⚪ 단색 플랫 (Monochrome Flat / 누끼·SVG 최적화)</span>
+          <span class="chip" data-val="hierarchical dual-opacity rendering mode in system blue (primary main symbol at 100% opacity, secondary accent parts at 35% opacity in unified hue)">🎨 계층형 불투명도 (Hierarchical Dual-Opacity 100% + 35%)</span>
+          <span class="chip" data-val="two-tone palette with primary slate dark tone and vibrant accent tone">🌓 투톤 팔레트 (Two-Tone Palette)</span>
+          <span class="chip" data-val="multicolor semantic color-coding with distinct functional color accents">🌈 다채색 시맨틱 (Multicolor Semantic)</span>
+          <span class="chip" data-val="dark mode graded (GRAD -25, reduced optical glare and low refraction stroke adjustment against dark background)">🌑 다크 모드 저굴절 (GRAD -25 보정)</span>
+        </div>
+      </div>
+
+      <!-- CATEGORY 5: 게슈탈트 시지각 스타일 (Gestalt Visual Perception Style) -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <div class="step-num" style="background: linear-gradient(135deg, #0284c7, #2563eb);">5</div>
+            게슈탈트 시지각 스타일 (Gestalt Visual Perception Style)
+          </div>
+          <span class="mode-badge-multi">✓ 복수 선택 가능</span>
+        </div>
+        <div class="chips-group" id="chips_icon_gestalt">
+          <span class="chip active" data-val="Prägnanz principle, pure geometric shapes (circle, square, equilateral triangle), minimum visual cognitive load">🧠 단순성 (Prägnanz: 원형·사각 순수 기하)</span>
+          <span class="chip active" data-val="high figure-ground contrast, crisp negative space silhouette, instantly recognizable visual threshold">🌓 전경-배경 대비 (Figure-Ground: 명확한 음각 실루엣)</span>
+          <span class="chip" data-val="Gestalt subtractive closure cutout technique, negative space offset boundary separating overlapping layers without stroke clash">✂️ 완결성 컷아웃 (Subtractive Closure: 음각 여백 분리)</span>
+          <span class="chip" data-val="Gestalt law of proximity, coherent spatial grouping of related elements, harmonious visual hierarchy">🧩 근접성 집단화 (Proximity: 기능별 요소 그룹핑)</span>
+          <span class="chip" data-val="optical equilibrium, geometrically symmetrical and optically balanced visual center of mass">⚖️ 시각적 평형 (Optical Equilibrium: 대칭 및 광학 중심)</span>
+        </div>
+      </div>
+
+      <!-- CATEGORY 6: 기술 사양 및 안티-노이즈 (Technical Spec & Strict Anti-Noise) -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <div class="step-num" style="background: linear-gradient(135deg, #0284c7, #2563eb);">6</div>
+            기술 사양 &amp; 안티-노이즈 봉인 (Technical Spec &amp; Anti-Noise)
+          </div>
+          <span style="font-size: 11px; color: #71717a;">이중 프레임 차단 &amp; 네이티브 모델 강제</span>
+        </div>
+
+        <!-- Anti-Double-Frame Banner -->
+        <div class="strict-mode-panel" id="panel_strict_icon_frame">
+          <label class="strict-mode-label" for="chk_no_inner_frame">
+            <input type="checkbox" id="chk_no_inner_frame" checked onchange="updateIconPrompt()">
+            <div class="strict-mode-info">
+              <div class="strict-mode-title">
+                <span>🛡️ 내부 연한 외곽선 및 어색한 여백 완전 제거 (No Faint Inner Frames)</span>
+                <span class="strict-mode-badge">필수 ON</span>
+              </div>
+              <div class="strict-mode-desc">
+                외곽선 안쪽에 생기기 쉬운 연한 테두리선(Inner Frame)과 붕 뜨는 이중 간격을 원천 차단하고, 단일 외곽선에 내부 심볼이 직접 안착되도록 강제합니다.
+              </div>
+            </div>
+          </label>
+        </div>
+
+        <!-- Strict Native Model Enforcement Banner -->
+        <div class="strict-mode-panel" id="panel_enforce_icon_model">
+          <label class="strict-mode-label" for="chk_enforce_icon_model">
+            <input type="checkbox" id="chk_enforce_icon_model" checked onchange="updateIconPrompt()">
+            <div class="strict-mode-info">
+              <div class="strict-mode-title">
+                <span>🚫 파이썬/스크립트 다운샘플링 차단 &amp; 완성형 HTML/SVG 산출물 강제</span>
+                <span class="strict-mode-badge">강제 ON</span>
+              </div>
+              <div class="strict-mode-desc">
+                파이썬 PIL/OpenCV 백엔드 다운샘플링 코드를 엄격히 차단하고, 96/48/24/16px 프리뷰와 개별 SVG 원클릭 다운로드가 가능한 완성형 .html 파일 산출물 생성을 강제합니다.
+              </div>
+            </div>
+          </label>
+        </div>
+
+        <div class="checkbox-grid">
+          <label class="check-item">
+            <input type="checkbox" id="neg_icon_pure_white" checked onchange="updateIconPrompt()">
+            순백색 배경 (#ffffff)
+          </label>
+          <label class="check-item">
+            <input type="checkbox" id="neg_icon_shadow" checked onchange="updateIconPrompt()">
+            그림자 / 음영 제거
+          </label>
+          <label class="check-item">
+            <input type="checkbox" id="neg_icon_3d" checked onchange="updateIconPrompt()">
+            입체감 / 3D 배제
+          </label>
+          <label class="check-item">
+            <input type="checkbox" id="neg_icon_gradient" checked onchange="updateIconPrompt()">
+            그라데이션 제거
+          </label>
+          <label class="check-item">
+            <input type="checkbox" id="neg_icon_grid" checked onchange="updateIconPrompt()">
+            정밀 그리드 정렬
+          </label>
+          <label class="check-item">
+            <input type="checkbox" id="neg_icon_isolated" checked onchange="updateIconPrompt()">
+            중앙 격리 &amp; 균일 여백
+          </label>
+          <label class="check-item">
+            <input type="checkbox" id="neg_icon_text" checked onchange="updateIconPrompt()">
+            텍스트 / 라벨 제거
+          </label>
+          <label class="check-item">
+            <input type="checkbox" id="neg_icon_photo" checked onchange="updateIconPrompt()">
+            실사 사진 / 렌더 배제
+          </label>
+        </div>
+      </div>
+
+      <!-- CATEGORY 7: 적용 UI 환경 및 시스템 조화 (Target UI Environment) -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <div class="step-num" style="background: linear-gradient(135deg, #0284c7, #2563eb);">7</div>
+            적용 UI 환경 &amp; 시스템 조화 (Target UI Environment)
+          </div>
+          <span class="mode-badge-single">● 단일 선택</span>
+        </div>
+        <div class="chips-group" id="chips_icon_target_ui" data-mode="single">
+          <span class="chip active" data-val="Apple SF Symbols ecosystem harmony, iOS Human Interface Guidelines, seamless typographic stroke matching">🍎 Apple SF Symbols 규격 조화 (iOS/macOS HIG)</span>
+          <span class="chip" data-val="Google Material Symbols v3 design system, Material You token alignment, Android UI">🤖 Google Material Symbols M3 규격 조화 (Android/Web)</span>
+          <span class="chip" data-val="modern web application navbar and sidebar toolbar UI, high readability at small scale">🌐 모던 웹 앱 내비바 &amp; 사이드바 툴바</span>
+          <span class="chip" data-val="high-contrast accessibility UI, WCAG AAA compliant optical clarity">♿ 고대비 접근성 (WCAG AAA 준수)</span>
+        </div>
+      </div>
+
+    </div>
+
     <!-- Right Output Panel -->
     <div class="output-panel">
       <div class="output-header">
-        <div class="output-title" style="display: flex; align-items: center; gap: 6px;">
-          <span>📝 최종 조합 프롬프트</span>
-          <span style="font-size: 10px; padding: 2px 6px; border-radius: 4px; background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.35); color: #6ee7b7; font-weight: 600;">🇰🇷 한글 답변 고정</span>
+        <div class="output-title">
+          <span id="output_panel_title">📝 픽셀아트 최종 조합 프롬프트</span>
         </div>
         <div class="word-count" id="wordCount">단어 수: 54</div>
       </div>
@@ -1552,17 +2134,18 @@
           <button class="fmt-btn active" id="fmt_png" data-fmt=".png" onclick="toggleTargetFormat('.png')">.png</button>
           <button class="fmt-btn" id="fmt_jpg" data-fmt=".jpg" onclick="toggleTargetFormat('.jpg')">.jpg</button>
           <button class="fmt-btn" id="fmt_svg" data-fmt=".svg" onclick="toggleTargetFormat('.svg')">.svg</button>
+          <button class="fmt-btn" id="fmt_html" data-fmt=".html" onclick="toggleTargetFormat('.html')">.html</button>
           <button class="fmt-btn" id="fmt_ico" data-fmt=".ico" onclick="toggleTargetFormat('.ico')">.ico</button>
         </div>
       </div>
 
-      <textarea id="finalPrompt" readonly>Chunky 8-bit pixel art, visible large square pixel blocks, retro NES arcade game style, low-resolution blocky dot design. recreating the exact character's face, hairstyle, and expression from the reference image. maintaining the original outfit and accessories visible in the reference image. following the angle and 1:1 framing of the reference image, clean background. no text, no watermark, no blur, no anti-aliasing, no realistic photograph, no 3d render. Target output format: deliver final asset as .png file. Please provide all responses and explanations strictly in Korean (모든 답변과 안내는 반드시 한국어로 작성해 주세요).</textarea>
+      <textarea id="finalPrompt" readonly></textarea>
 
       <div class="btn-row">
         <button class="btn-copy" id="copyBtn" onclick="copyPrompt()">
           📋 프롬프트 원클릭 복사
         </button>
-        <button class="btn-reset" onclick="resetAll()">초기화</button>
+        <button class="btn-reset" onclick="handleReset()">초기화</button>
       </div>
 
       <div class="neg-box">
@@ -1847,6 +2430,110 @@
       container.innerHTML = html;
     }
 
+    // Studio Mode State & Presets
+    let currentStudioMode = 'pixel'; // 'pixel' | 'icon'
+    let iconTargetFormats = [".svg", ".html"];
+
+    const ICON_PRESETS = {
+      example_a: {
+        keywords: "Gear wheel icon representing system settings",
+        variant: "outline vector glyph, clean uniform stroke contours, hollow geometry",
+        weight: "standard regular 2px stroke width (wght 400-500), balanced line harmony",
+        scale: "standard scale (opsz 24dp, standard UI body)",
+        color_mode: "hierarchical dual-opacity rendering mode in system blue (primary main symbol at 100% opacity, secondary accent parts at 35% opacity in unified hue)",
+        gestalt: [
+          "Prägnanz principle, pure geometric shapes (circle, square, equilateral triangle), minimum visual cognitive load",
+          "high figure-ground contrast, crisp negative space silhouette, instantly recognizable visual threshold"
+        ],
+        target_ui: "Apple SF Symbols ecosystem harmony, iOS Human Interface Guidelines, seamless typographic stroke matching"
+      },
+      example_b: {
+        keywords: "Weather forecast icon depicting a sun partially behind a rain cloud",
+        variant: "multi-layer stacked overlapping structure with distinct foreground and background visual depths",
+        weight: "standard regular 2px stroke width (wght 400-500), balanced line harmony",
+        scale: "display hero scale (opsz 48dp, fine nuances, subtle curves)",
+        color_mode: "dark mode graded (GRAD -25, reduced optical glare and low refraction stroke adjustment against dark background)",
+        gestalt: [
+          "Gestalt subtractive closure cutout technique, negative space offset boundary separating overlapping layers without stroke clash",
+          "Gestalt law of proximity, coherent spatial grouping of related elements, harmonious visual hierarchy"
+        ],
+        target_ui: "Google Material Symbols v3 design system, Material You token alignment, Android UI"
+      },
+      editor_suite: {
+        keywords: "1. Save: 1:1 square floppy disk with top shutter and label lines. 2. Save As: 1:1 square floppy disk with plus badge at bottom right. 3. Switch: 1:1 circular dual-arrow loop (🔄). 4. View Editor: 1:1 square document outline with 5 horizontal text lines. 5. View Split: 1:1 square document outline with center divider, left 5 lines, right mountain and sun. 6. View Preview: 1:1 square document outline with centered mountain and sun",
+        variant: "outline vector glyph, clean uniform stroke contours, hollow geometry",
+        weight: "standard regular 2px stroke width (wght 400-500), balanced line harmony",
+        scale: "standard scale (opsz 24dp, standard UI body)",
+        color_mode: "monochrome flat dark charcoal / black on pure white background, high contrast, clean vector cutout",
+        gestalt: [
+          "Prägnanz principle, pure geometric shapes (circle, square, equilateral triangle), minimum visual cognitive load",
+          "high figure-ground contrast, crisp negative space silhouette, instantly recognizable visual threshold",
+          "Gestalt subtractive closure cutout technique, negative space offset boundary separating overlapping layers without stroke clash"
+        ],
+        target_ui: "modern web application navbar and sidebar toolbar UI, high readability at small scale"
+      },
+      sys_nav: {
+        keywords: "1. Home: minimal house silhouette. 2. Search: clean magnifying glass. 3. Settings: 6-tooth gear wheel. 4. User Profile: clean single bust outline. 5. Notifications: bell with subtle clapper",
+        variant: "outline vector glyph, clean uniform stroke contours, hollow geometry",
+        weight: "standard regular 2px stroke width (wght 400-500), balanced line harmony",
+        scale: "standard scale (opsz 24dp, standard UI body)",
+        color_mode: "monochrome flat dark charcoal / black on pure white background, high contrast, clean vector cutout",
+        gestalt: [
+          "Prägnanz principle, pure geometric shapes (circle, square, equilateral triangle), minimum visual cognitive load",
+          "high figure-ground contrast, crisp negative space silhouette, instantly recognizable visual threshold"
+        ],
+        target_ui: "Apple SF Symbols ecosystem harmony, iOS Human Interface Guidelines, seamless typographic stroke matching"
+      },
+      file_ops: {
+        keywords: "1. New File: clean document with plus indicator. 2. Open File: folder opening with upward arrow. 3. Save File: minimal floppy disk. 4. Delete File: trash can outline. 5. Copy File: overlapping dual document rectangles",
+        variant: "outline vector glyph, clean uniform stroke contours, hollow geometry",
+        weight: "standard regular 2px stroke width (wght 400-500), balanced line harmony",
+        scale: "standard scale (opsz 24dp, standard UI body)",
+        color_mode: "monochrome flat dark charcoal / black on pure white background, high contrast, clean vector cutout",
+        gestalt: [
+          "Prägnanz principle, pure geometric shapes (circle, square, equilateral triangle), minimum visual cognitive load",
+          "Gestalt subtractive closure cutout technique, negative space offset boundary separating overlapping layers without stroke clash"
+        ],
+        target_ui: "modern web application navbar and sidebar toolbar UI, high readability at small scale"
+      }
+    };
+
+    function switchStudio(mode) {
+      currentStudioMode = mode;
+      document.documentElement.setAttribute('data-studio', mode);
+
+      const btnPixel = document.getElementById('btn_tab_pixel');
+      const btnIcon = document.getElementById('btn_tab_icon');
+      if (btnPixel) btnPixel.classList.toggle('active', mode === 'pixel');
+      if (btnIcon) btnIcon.classList.toggle('active', mode === 'icon');
+
+      const pixelContainer = document.getElementById('pixel_steps_container');
+      const iconContainer = document.getElementById('icon_steps_container');
+      if (pixelContainer) pixelContainer.style.display = (mode === 'pixel' ? 'flex' : 'none');
+      if (iconContainer) iconContainer.style.display = (mode === 'icon' ? 'flex' : 'none');
+
+      const outTitle = document.getElementById('output_panel_title');
+
+      if (mode === 'pixel') {
+        if (outTitle) outTitle.innerText = '📝 픽셀아트 최종 조합 프롬프트';
+        syncFormatButtons(targetFormats);
+        updatePrompt();
+      } else {
+        if (outTitle) outTitle.innerText = '📝 아이콘 최종 조합 프롬프트';
+        syncFormatButtons(iconTargetFormats);
+        updateIconPrompt();
+      }
+
+      safeSetStorage('gotchaprompt_studio', mode);
+    }
+
+    function syncFormatButtons(activeList) {
+      document.querySelectorAll(".fmt-btn").forEach(b => {
+        const fmt = b.getAttribute("data-fmt") || b.innerText.trim();
+        b.classList.toggle("active", activeList.includes(fmt));
+      });
+    }
+
     function toggleTargetFormat(fmt) {
       const btn = document.getElementById("fmt_" + fmt.replace('.', ''));
       if (btn) btn.classList.toggle("active");
@@ -1855,8 +2542,14 @@
       document.querySelectorAll(".fmt-btn.active").forEach(b => {
         actives.push(b.getAttribute("data-fmt") || b.innerText.trim());
       });
-      targetFormats = actives;
-      updatePrompt();
+
+      if (currentStudioMode === 'pixel') {
+        targetFormats = actives;
+        updatePrompt();
+      } else {
+        iconTargetFormats = actives;
+        updateIconPrompt();
+      }
     }
 
     // Safe LocalStorage Handlers (Guards against sandboxed/file origin SecurityError)
@@ -1883,7 +2576,7 @@
 
     // Theme Management (Dark / Light Mode)
     function initTheme() {
-      const saved = safeGetStorage('pixelprompt_theme');
+      const saved = safeGetStorage('gotchaprompt_theme') || safeGetStorage('pixelprompt_theme');
       if (saved === 'light') {
         setTheme('light');
       } else {
@@ -1906,7 +2599,6 @@
       const isLight = (theme === 'light');
       document.documentElement.setAttribute('data-theme', isLight ? 'light' : 'dark');
 
-      // 1. Immediately update DOM elements (Guaranteed execution)
       const chk = document.getElementById('themeSwitch');
       const darkIcon = document.getElementById('themeDarkIcon');
       const lightIcon = document.getElementById('themeLightIcon');
@@ -1923,8 +2615,7 @@
         else lightIcon.classList.remove('active');
       }
 
-      // 2. Safely persist
-      safeSetStorage('pixelprompt_theme', isLight ? 'light' : 'dark');
+      safeSetStorage('gotchaprompt_theme', isLight ? 'light' : 'dark');
     }
 
     function setStyle(idx, val) {
@@ -2075,6 +2766,7 @@
     }
 
     function updatePrompt() {
+      if (currentStudioMode !== 'pixel') return;
       syncConflictAvoidance();
       const parts = [];
 
@@ -2271,6 +2963,9 @@
         parts.push(`Please provide all responses and explanations strictly in Korean (모든 답변과 안내는 반드시 한국어로 작성해 주세요)`);
       }
 
+      // Immediate Generation Mandate (Bypass preliminary analysis, plans, and chatter)
+      parts.push(`IMMEDIATE GENERATION MANDATE: Do NOT output preliminary analysis, plan explanations, greetings, or conversational pre-announcements. Bypass all conversational filler and immediately invoke your native image generation tool to produce and deliver the artwork directly without asking for confirmation. (사전 분석, 계획 설명, 인사말 등의 서론을 일절 생략하고, 별도의 확인 질문이나 안내 절차 없이 즉시 이미지 생성 도구를 실행하여 결과 이미지를 바로 생성해 주세요)`);
+
       const full = parts.join('. ') + '.';
       document.getElementById('finalPrompt').value = full;
 
@@ -2455,14 +3150,244 @@
       updatePrompt();
     }
 
+    function handleReset() {
+      if (currentStudioMode === 'pixel') {
+        resetAll();
+      } else {
+        resetIconAll();
+      }
+    }
+
+    function switchDomainTab(domain) {
+      document.querySelectorAll("#icon_domain_tabs .domain-tab-btn").forEach(btn => btn.classList.remove("active"));
+      if (window.event && window.event.target) {
+        window.event.target.classList.add("active");
+      }
+
+      const panels = ["nav", "action", "comm", "sys", "weather", "abstract"];
+      panels.forEach(p => {
+        const el = document.getElementById("domain_panel_" + p);
+        if (el) el.style.display = (p === domain ? "flex" : "none");
+      });
+    }
+
+    function setSingleChip(containerId, targetVal) {
+      document.querySelectorAll(`#${containerId} .chip`).forEach(chip => {
+        chip.classList.toggle("active", chip.getAttribute("data-val") === targetVal);
+      });
+    }
+
+    function setMultiChips(containerId, targetVals) {
+      document.querySelectorAll(`#${containerId} .chip`).forEach(chip => {
+        chip.classList.toggle("active", targetVals.includes(chip.getAttribute("data-val")));
+      });
+    }
+
+    function applyIconPreset(key) {
+      const preset = ICON_PRESETS[key];
+      if (!preset) return;
+
+      document.querySelectorAll("#icon_steps_container .outfit-preset-btn").forEach(b => b.classList.remove("active"));
+      const btn = document.getElementById("btn_icon_pre_" + key.replace("example_", ""));
+      if (btn) btn.classList.add("active");
+
+      const input = document.getElementById("input_icon_keywords");
+      if (input) input.value = preset.keywords;
+
+      if (preset.variant) setSingleChip("chips_icon_variant", preset.variant);
+      if (preset.weight) setSingleChip("chips_icon_weight", preset.weight);
+      if (preset.scale) setSingleChip("chips_icon_scale", preset.scale);
+      if (preset.color_mode) setSingleChip("chips_icon_color_mode", preset.color_mode);
+      if (preset.gestalt) setMultiChips("chips_icon_gestalt", preset.gestalt);
+      if (preset.target_ui) setSingleChip("chips_icon_target_ui", preset.target_ui);
+
+      updateIconPrompt();
+    }
+
+    function clearIconInput() {
+      document.querySelectorAll("#icon_steps_container .outfit-preset-btn").forEach(b => b.classList.remove("active"));
+      const input = document.getElementById("input_icon_keywords");
+      if (input) input.value = "";
+      updateIconPrompt();
+    }
+
+    function appendIconKeyword(str) {
+      const input = document.getElementById("input_icon_keywords");
+      if (!input) return;
+      if (input.value.trim() === "") {
+        input.value = str;
+      } else {
+        input.value = input.value.trim() + ", " + str;
+      }
+      updateIconPrompt();
+    }
+
+    function getSelectedIconChips(containerId) {
+      const active = [];
+      document.querySelectorAll(`#${containerId} .chip.active`).forEach(c => {
+        const val = c.getAttribute("data-val");
+        if (val) active.push(val);
+      });
+      return active;
+    }
+
+    function updateIconPrompt() {
+      if (currentStudioMode !== 'icon') return;
+
+      const parts = [];
+
+      // 1. Subject & Metaphor
+      const inputKeywords = document.getElementById('input_icon_keywords');
+      if (inputKeywords && inputKeywords.value.trim()) {
+        parts.push(inputKeywords.value.trim());
+      }
+
+      // 2. Structural Variant & State
+      const variantChips = getSelectedIconChips("chips_icon_variant");
+      if (variantChips.length > 0) parts.push(variantChips[0]);
+
+      // 3. Stroke Weight & Optical Scale
+      const weightChips = getSelectedIconChips("chips_icon_weight");
+      const scaleChips = getSelectedIconChips("chips_icon_scale");
+      const wsParts = [];
+      if (weightChips.length > 0) wsParts.push(weightChips[0]);
+      if (scaleChips.length > 0) wsParts.push(scaleChips[0]);
+      if (wsParts.length > 0) parts.push(wsParts.join(', '));
+
+      // 4. Color Palette & Rendering Mode
+      const colorModeChips = getSelectedIconChips("chips_icon_color_mode");
+      if (colorModeChips.length > 0) parts.push(colorModeChips[0]);
+
+      // 5. Gestalt Visual Perception Style
+      const gestaltChips = getSelectedIconChips("chips_icon_gestalt");
+      if (gestaltChips.length > 0) {
+        parts.push(`Gestalt visual perception: ${gestaltChips.join(', ')}`);
+      }
+
+      // 6. Technical Spec & Strict Anti-Noise
+      const noInnerFrame = document.getElementById('chk_no_inner_frame') ? document.getElementById('chk_no_inner_frame').checked : true;
+      if (noInnerFrame) {
+        parts.push("CRITICAL GEOMETRY RULE: Strictly NO inner faint frames, NO secondary inner borders, NO floating margins, and NO double-line outlines. Each icon must feature a single clean primary boundary with internal symbols placed directly inside with zero floating gap");
+      }
+
+      const enforceModel = document.getElementById('chk_enforce_icon_model') ? document.getElementById('chk_enforce_icon_model').checked : true;
+      if (enforceModel) {
+        parts.push("CRITICAL EXECUTION MANDATE: Synthesize and deliver these icons EXCLUSIVELY as production-ready inline SVG vector assets within the requested self-contained .html deliverable. STRICTLY PROHIBITED: Do NOT write or execute Python backend scripts, OpenCV downsampling, or PIL scripts. Output the complete, copy-pasteable .html code directly");
+      }
+
+      if (document.getElementById('neg_icon_pure_white') && document.getElementById('neg_icon_pure_white').checked) {
+        parts.push("pure white background (#ffffff), seamless canvas, zero background texture");
+      }
+      if (document.getElementById('neg_icon_grid') && document.getElementById('neg_icon_grid').checked) {
+        parts.push("pixel-perfect geometric grid alignment, rounded stroke caps and joins");
+      }
+      if (document.getElementById('neg_icon_isolated') && document.getElementById('neg_icon_isolated').checked) {
+        parts.push("centrally isolated glyph, generous uniform padding margin from canvas edge");
+      }
+
+      const negMain = [];
+      if (enforceModel) negMain.push('python code, python script, opencv downsampling, pil script, code execution');
+      if (document.getElementById('neg_icon_3d') && document.getElementById('neg_icon_3d').checked) negMain.push('no 3d extrusion, no skeuomorphism, no isometric bevel');
+      if (document.getElementById('neg_icon_shadow') && document.getElementById('neg_icon_shadow').checked) negMain.push('no shadows, no drop shadow, no ambient occlusion');
+      if (document.getElementById('neg_icon_gradient') && document.getElementById('neg_icon_gradient').checked) negMain.push('no gradients, no color ramps');
+      if (document.getElementById('neg_icon_text') && document.getElementById('neg_icon_text').checked) negMain.push('no text, no letters, no words, no alphabet labels');
+      if (noInnerFrame) negMain.push('no inner faint frames, no secondary borders, no double outlines, no floating inner margin lines');
+      if (document.getElementById('neg_icon_photo') && document.getElementById('neg_icon_photo').checked) negMain.push('no realistic photograph, no clay render, no image noise');
+      if (negMain.length > 0) parts.push(negMain.join(', '));
+
+      // 7. Target UI Environment
+      const targetUIChips = getSelectedIconChips("chips_icon_target_ui");
+      if (targetUIChips.length > 0) parts.push(targetUIChips[0]);
+
+      // Target Format & Deliverable Specification
+      if (iconTargetFormats.length === 1) {
+        parts.push(`Target output format: deliver final asset as ${iconTargetFormats[0]} file`);
+      } else if (iconTargetFormats.length > 1) {
+        parts.push(`Target output formats: deliver final assets as ${iconTargetFormats.join(', ')} files`);
+      }
+
+      // DELIVERABLE FORMAT MANDATE: Self-contained HTML Multi-Scale Preview & Individual SVG Downloader
+      parts.push(`DELIVERABLE FORMAT MANDATE (브라우저 프리뷰 & 개별 SVG 다운로더 .html 산출물 제공 규격):
+결과물은 사용자가 웹 브라우저에서 바로 열어 4대 멀티사이즈(96px, 48px, 24px, 16px) 렌더링을 시각적으로 검증하고, 단일 또는 복수의 아이콘을 개별(및 일괄) .svg 파일로 원클릭 다운로드할 수 있도록 아래 명세를 준수한 '단독 실행형 .html 코드 파일'로 출력해 주세요:
+1. 자체 완결형 인라인 SVG (Self-Contained Inline SVG):
+   - 외부 이미지 링크(<img src="...">)는 브라우저에서 깨지므로 절대 사용하지 마시고, 각 카드와 멀티사이즈 행에 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" ...> 벡터 코드를 직접 인라인으로 삽입하세요.
+   - 단일 굵은 외곽선(High-contrast bold stroke), 이중 테두리 제로, 선명한 기하학적 패스(Path)를 충실히 구현하세요.
+2. 멀티사이즈 검증 그리드 (Multi-Scale Optical Verification):
+   - 메인 96x96 프리뷰 박스(.icon-box-large) 하단에 48px, 24px, 16px 크기의 멀티사이즈 프리뷰 행(.sizes-row)을 배치하여 작은 스케일에서도 기호의 판별성과 획 뭉침이 없는지 한눈에 검증할 수 있도록 하세요.
+3. 원클릭 개별 & 전체 다운로드 스크립트 (Download Engine):
+   - 각 아이콘 카드마다 [📥 SVG 다운로드] 버튼을 배치하고, 클릭 시 해당 카드의 인라인 SVG 코드를 Blob 객체(image/svg+xml)로 변환하여 파일명(예: icon_save.svg)으로 즉시 로컬 다운로드하는 클라이언트 JavaScript 함수를 내장하세요.
+   - 카드 상단 헤더에는 모든 아이콘을 순차적으로 내려받는 [📦 전체 아이콘 일괄 다운로드] 버튼을 함께 제공하세요.
+4. 모던 CSS UI 카드 레이아웃:
+   - 본문 배경(#f3f4f6), 반응형 카드 그리드(repeat(auto-fit, minmax(280px, 1fr))), 흰색 라운드 카드(#ffffff, border-radius: 12px), 점선 96px 프리뷰 박스, 아이콘 영문/한글 제목(h3), 파일명 모노스페이스 배지(.filename) 스타일을 완전히 갖춘 단일 .html 코드로 출력해 주세요.`);
+
+      // Strictly Respond in Korean & Enforce Model
+      if (enforceModel) {
+        parts.push(`Please provide all responses and explanations strictly in Korean (모든 답변과 안내는 반드시 한국어로 작성해 주세요. 또한 파이썬 스크립트나 OpenCV/PIL 등의 백엔드 다운샘플링 코드는 작성하지 마시고, 요구된 인라인 SVG 벡터 아트와 다운로드 스크립트가 포함된 완성형 .html 코드로 산출물을 온전히 제공해 주세요)`);
+      } else {
+        parts.push(`Please provide all responses and explanations strictly in Korean (모든 답변과 안내는 반드시 한국어로 작성해 주세요)`);
+      }
+
+      // Immediate Generation Mandate (Bypass preliminary analysis, plans, and chatter)
+      parts.push(`IMMEDIATE GENERATION MANDATE: Do NOT output preliminary analysis, plan explanations, greetings, or conversational pre-announcements. Bypass all conversational filler and immediately provide the complete, ready-to-run .html code file deliverable directly without asking for confirmation. (사전 분석, 계획 설명, 인사말 등의 서론을 일절 생략하고, 별도의 확인 질문이나 안내 절차 없이 즉시 브라우저에서 바로 열어 다운로드할 수 있는 완성형 .html 코드 파일 산출물을 작성해 주세요)`);
+
+      const fullPrompt = parts.join('. ') + '.';
+      const finalPromptEl = document.getElementById('finalPrompt');
+      if (finalPromptEl) finalPromptEl.value = fullPrompt;
+
+      const words = fullPrompt.split(/\s+/).filter(Boolean).length;
+      const wordCountEl = document.getElementById('wordCount');
+      if (wordCountEl) wordCountEl.innerText = `단어 수: ${words}`;
+
+      // Dedicated Negative Display
+      const negList = [];
+      if (enforceModel) negList.push('python code', 'python script', 'opencv downsampling', 'pil script', 'code execution');
+      if (document.getElementById('neg_icon_3d') && document.getElementById('neg_icon_3d').checked) negList.push('3d extrusion', 'skeuomorphism', 'bevel', 'isometric');
+      if (document.getElementById('neg_icon_shadow') && document.getElementById('neg_icon_shadow').checked) negList.push('shadows', 'drop shadow', 'ambient occlusion', 'soft blur');
+      if (document.getElementById('neg_icon_gradient') && document.getElementById('neg_icon_gradient').checked) negList.push('gradients', 'color ramps');
+      if (document.getElementById('neg_icon_text') && document.getElementById('neg_icon_text').checked) negList.push('text', 'letters', 'words', 'typography', 'labels');
+      if (noInnerFrame) negList.push('inner faint frames', 'secondary borders', 'double outlines', 'floating margins');
+      if (document.getElementById('neg_icon_photo') && document.getElementById('neg_icon_photo').checked) negList.push('realistic photograph', '3d render', 'clay model', 'noise');
+
+      const negDisplay = document.getElementById('negDisplay');
+      if (negDisplay) negDisplay.innerText = negList.join(', ');
+    }
+
+    function resetIconAll() {
+      // 1. Reset formats to .svg, .html
+      iconTargetFormats = [".svg", ".html"];
+      syncFormatButtons(iconTargetFormats);
+
+      // 2. Reset preset to Example A (iOS Settings)
+      applyIconPreset('example_a');
+
+      // 3. Reset strict panels & negatives
+      const noInner = document.getElementById('chk_no_inner_frame');
+      if (noInner) noInner.checked = true;
+      const enforceM = document.getElementById('chk_enforce_icon_model');
+      if (enforceM) enforceM.checked = true;
+
+      if (document.getElementById('neg_icon_pure_white')) document.getElementById('neg_icon_pure_white').checked = true;
+      if (document.getElementById('neg_icon_shadow')) document.getElementById('neg_icon_shadow').checked = true;
+      if (document.getElementById('neg_icon_3d')) document.getElementById('neg_icon_3d').checked = true;
+      if (document.getElementById('neg_icon_gradient')) document.getElementById('neg_icon_gradient').checked = true;
+      if (document.getElementById('neg_icon_grid')) document.getElementById('neg_icon_grid').checked = true;
+      if (document.getElementById('neg_icon_isolated')) document.getElementById('neg_icon_isolated').checked = true;
+      if (document.getElementById('neg_icon_text')) document.getElementById('neg_icon_text').checked = true;
+      if (document.getElementById('neg_icon_photo')) document.getElementById('neg_icon_photo').checked = true;
+
+      updateIconPrompt();
+    }
+
     // Application Initialization
     function initApp() {
       try { initTheme(); } catch (e) { console.error("initTheme err:", e); }
+      
+      // Pixel Studio Chip Listeners
       try {
-        document.querySelectorAll(".chips-group").forEach(group => {
+        document.querySelectorAll("#pixel_steps_container .chips-group").forEach(group => {
           const isSingle = (group.getAttribute("data-mode") === "single");
           group.querySelectorAll(".chip").forEach(chip => {
-            chip.addEventListener("click", (e) => {
+            chip.addEventListener("click", () => {
               const dimmedContainer = chip.closest(".dimmed");
               if (dimmedContainer) {
                 // 스마트 언락: 컨테이너 ID(content_step2/3/4)로부터 해당 스킵 체크박스 해제
@@ -2496,13 +3421,44 @@
             });
           });
         });
-      } catch (e) { console.error("chip init err:", e); }
+      } catch (e) { console.error("pixel chip init err:", e); }
+
+      // Icon Studio Chip Listeners (exclude click-to-append domain chips)
+      try {
+        document.querySelectorAll("#icon_steps_container .chips-group:not(.domain-chips-panel)").forEach(group => {
+          const isSingle = (group.getAttribute("data-mode") === "single");
+          group.querySelectorAll(".chip").forEach(chip => {
+            chip.addEventListener("click", () => {
+              if (isSingle) {
+                const wasActive = chip.classList.contains("active");
+                group.querySelectorAll(".chip").forEach(c => c.classList.remove("active"));
+                if (!wasActive) chip.classList.add("active");
+              } else {
+                chip.classList.toggle("active");
+              }
+              updateIconPrompt();
+            });
+          });
+        });
+      } catch (e) { console.error("icon chip init err:", e); }
+
       try { toggleRefStep(2); } catch (e) {}
       try { toggleRefStep(3); } catch (e) {}
       try { toggleRefStep(4); } catch (e) {}
       try { renderTextRows(); } catch (e) {}
       try { toggleTextOverlay(); } catch (e) {}
-      try { updatePrompt(); } catch (e) { console.error("updatePrompt err:", e); }
+
+      // Restore Studio Mode (Pixel or Icon)
+      try {
+        const savedStudio = safeGetStorage('gotchaprompt_studio');
+        if (savedStudio === 'icon') {
+          switchStudio('icon');
+        } else {
+          switchStudio('pixel');
+        }
+      } catch (e) {
+        switchStudio('pixel');
+      }
     }
 
     if (document.readyState === "loading") {
